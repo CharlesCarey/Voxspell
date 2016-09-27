@@ -28,7 +28,7 @@ public class WordList extends ArrayList<Level> {
 	public static WordList GetWordList() {
 		if (_instance == null) {
 			_instance = initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
-			loadStatsFromFile(_instance);
+			loadStatsFromFile(new File("Word-Log"));
 		}
 
 		return _instance;
@@ -92,6 +92,57 @@ public class WordList extends ArrayList<Level> {
 		return null;
 	}
 
+	/**
+	 * Loads levels into the existing wordlist
+	 */
+	public static void loadLevel(File f) {
+		
+		String levelName = "";
+		boolean lastLineWasWord = false;
+		WordList wordlist = WordList.GetWordList();
+		HashMap<String, int[]> levelHashMap = new HashMap<String, int[]>();
+		
+		try {
+			//Creating the reader to loop through each line in the text file
+			BufferedReader textFileReader = new BufferedReader(new FileReader(f));
+
+			String line; 
+			
+			while((line = textFileReader.readLine()) != null) {
+
+				//If the first char is % then its the name of the level
+				if(line.charAt(0) == '%') {
+
+					if(lastLineWasWord) {
+						Level level = new Level(levelName, levelHashMap);
+						wordlist.add(level);
+					}
+
+					levelName = line.substring(1, line.length());
+
+					//Create the hashmap for that level
+					levelHashMap = new HashMap<String, int[]>();
+
+					lastLineWasWord = false;
+
+				} else {
+
+					//Hashing each word to the level hashmap
+					levelHashMap.put(line, new int[3]);
+
+					lastLineWasWord = true;
+				}
+
+			}
+			//Adding the last level in to the list
+			Level level = new Level(levelName, levelHashMap);
+			wordlist.add(level);
+			textFileReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Saves all the stats currently in the WordList to a text file
 	 */
@@ -171,13 +222,13 @@ public class WordList extends ArrayList<Level> {
 	}
 
 	/**
-	 * Loads stats from the Word-Log file into the WordList object
+	 * Loads stats from any Word-Log file into the WordList object
 	 * 
 	 * @param wordList
 	 * @return WordList
 	 */
-	private static WordList loadStatsFromFile(WordList wordList) {
-		File savedWords = new File("Word-Log");
+	private static WordList loadStatsFromFile(File f) {
+		File savedWords = f;
 
 		WordList wordlist = WordList.GetWordList();
 
@@ -194,7 +245,7 @@ public class WordList extends ArrayList<Level> {
 						line = line.replaceAll("unlock ", "");
 						//Loop through all levels to find the right one and unlock it
 						for(int i = 0 ; i < wordlist.size(); i++) {
-							Level level = wordList.get(i);
+							Level level = wordlist.get(i);
 							String levelName = level.levelName();
 							if(levelName.equals(line)) {
 								level.unlockLevel();
@@ -279,7 +330,7 @@ public class WordList extends ArrayList<Level> {
 		}
 
 
-		return wordList;
+		return wordlist;
 	}
 
 	/**
@@ -293,7 +344,6 @@ public class WordList extends ArrayList<Level> {
 		File wordList = new File(fileName);
 
 		String line;
-		int lvlCounter = 1;
 		String levelName = "";
 		boolean lastLineWasWord = false;
 
