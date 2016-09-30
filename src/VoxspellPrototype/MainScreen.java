@@ -1,10 +1,6 @@
 package VoxspellPrototype;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -78,9 +74,7 @@ public class MainScreen extends Parent {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				FileChooser fileChooser = new FileChooser();
-				File newWordList = fileChooser.showOpenDialog(new Stage());
-				WordList.loadLevel(newWordList);
+				new WordListLoader();
 			}
 			
 		});

@@ -87,7 +87,7 @@ public class LevelSelectionScreen extends Parent {
 			
 		//Else if the word log doesn't exist then let the user choose what level they want to start at
 		} else if(!wordlog.exists()) {
-			ChooseLevelScreen();
+			ChooseLevelScreen(0, WordList.GetWordList().size());
 		}
 
 		//Or if the Word-Log file is there, then check if it is empty or not to decide which screen to show
@@ -95,7 +95,7 @@ public class LevelSelectionScreen extends Parent {
 			BufferedReader r = new BufferedReader(new FileReader(wordlog));
 
 			if(r.readLine() == null) {
-				ChooseLevelScreen();
+				ChooseLevelScreen(0, WordList.GetWordList().size());
 			} else {
 				GenerateLevelSelectionScreen();
 			}
@@ -111,7 +111,7 @@ public class LevelSelectionScreen extends Parent {
 	/**
 	 * This generates the screen where users can choose which level to start at
 	 */
-	private void ChooseLevelScreen() {
+	public void ChooseLevelScreen(int startLevel, int endLevel) {
 		
 		//Get the WordList
 		final WordList wordlist = WordList.GetWordList();
@@ -120,7 +120,7 @@ public class LevelSelectionScreen extends Parent {
 		ObservableList<String> options = FXCollections.observableArrayList();
 		
 		//Getting the names of each level and adding it to the options list
-		for(int i = 0; i < wordlist.size(); i++) {
+		for(int i = startLevel; i < endLevel; i++) {
 			Level level = wordlist.get(i);
 			String levelName = level.levelName();
 			options.add(levelName);

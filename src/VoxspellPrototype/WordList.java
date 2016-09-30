@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import java.util.Map;
 
 public class WordList extends ArrayList<Level> {
 
+	private static ArrayList<String> _addedWordLists = new ArrayList<String>();
 	private static WordList _instance = null;
 
 	private WordList() {
@@ -32,6 +34,16 @@ public class WordList extends ArrayList<Level> {
 		}
 
 		return _instance;
+	}
+
+	/**
+	 * This method stores the paths to all the word lists added to the program
+	 * @param path
+	 */
+	public void addWordList(String path) {
+		if(!_addedWordLists.contains(path)) {
+			_addedWordLists.add(path);
+		}
 	}
 
 	/**
@@ -96,18 +108,18 @@ public class WordList extends ArrayList<Level> {
 	 * Loads levels into the existing wordlist
 	 */
 	public static void loadLevel(File f) {
-		
+
 		String levelName = "";
 		boolean lastLineWasWord = false;
 		WordList wordlist = WordList.GetWordList();
 		HashMap<String, int[]> levelHashMap = new HashMap<String, int[]>();
-		
+
 		try {
 			//Creating the reader to loop through each line in the text file
 			BufferedReader textFileReader = new BufferedReader(new FileReader(f));
 
 			String line; 
-			
+
 			while((line = textFileReader.readLine()) != null) {
 
 				//If the first char is % then its the name of the level
@@ -142,12 +154,13 @@ public class WordList extends ArrayList<Level> {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Saves all the stats currently in the WordList to a text file
 	 */
 	public void saveWordListToDisk() {
 		File f = new File("Word-Log");
+		File paths = new File("Loaded-Files");
 
 		try {
 
@@ -155,8 +168,21 @@ public class WordList extends ArrayList<Level> {
 			f.delete();
 			f.createNewFile();
 
+			paths.delete();
+			paths.createNewFile();
+
+			BufferedWriter pathsFileWriter = new BufferedWriter(new FileWriter(paths));
+
+			//Saving all the paths to file
+			for(int i = 0; i < _addedWordLists.size(); i++) {
+				pathsFileWriter.append(_addedWordLists.get(i) + "\n");
+			}
+
+			pathsFileWriter.close();
+
 			BufferedWriter textFileWriter = new BufferedWriter(new FileWriter(f));
 
+			//Saving all the words stats to file
 			for(int i = 0; i < this.size(); i++) {
 				//Getting a level from the hash map
 				Level level = this.get(i);
@@ -214,7 +240,6 @@ public class WordList extends ArrayList<Level> {
 				}
 			}
 
-
 			textFileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -233,6 +258,25 @@ public class WordList extends ArrayList<Level> {
 		WordList wordlist = WordList.GetWordList();
 
 		try {
+
+			//Loading in all the previously loaded files
+			File pathsToWordLists = new File("Loaded-Files");
+			if(pathsToWordLists.exists()) {
+				BufferedReader pathsReader = new BufferedReader(new FileReader(pathsToWordLists));
+
+				String path = "";
+				while((path = pathsReader.readLine()) != null) {
+					File wordlistToLoad = new File(path);
+					if(wordlistToLoad.exists()) {
+						loadLevel(wordlistToLoad);
+						_addedWordLists.add(path);
+					} else {
+						PopupWindow.DeployPopupWindow("The file loaded from " + path + " does not exist!");
+					}
+				}
+				pathsReader.close();
+			}
+
 
 			//Reading words from file if they exist
 			if(savedWords.exists()) {
@@ -267,13 +311,13 @@ public class WordList extends ArrayList<Level> {
 						//Getting the level associated with the word and adding the word to its failed list
 						Level level = wordlist.getLevelFromName(levelName);
 						level.addToFailed(splitLine[splitLine.length - 1]);
-						
+
 						//Else if the word needs to be added to the mastered list
 					} else if (line.contains("mastered")) {
 						line = line.replaceAll("mastered ", "");
 						String[] splitLine = line.split("\\s+");
 						String levelName = "";
-						
+
 						//Getting the level name
 						for(int i = 0; i < splitLine.length - 1; i++) {
 							if(i != splitLine.length - 2) {
@@ -285,26 +329,25 @@ public class WordList extends ArrayList<Level> {
 						//Getting the level associated with the word and adding the word to its mastered list
 						Level level = wordlist.getLevelFromName(levelName);
 						level.addToMastered(splitLine[splitLine.length - 1]);
-						
+
 						//Else its the stats for a word
 					} else {
 						//Splitting each line by spaces
 						String[] wordAndStats = line.split("\\s+"); 
 
 						//Getting the key for the level hash map
-						int lengthOfLevelName = 1 + wordAndStats.length - 5;
+						int lengthOfLevelName = wordAndStats.length - 4;
 						String levelName = "";
 						for(int i = 0; i < lengthOfLevelName; i++) {
-							if(i != lengthOfLevelName - 1) {
+							if(i != lengthOfLevelName - 1 && lengthOfLevelName > 1) {
 								levelName += wordAndStats[i] + " ";
 							} else {
 								levelName += wordAndStats[i];	
 							}
 						}
 						levelName.trim();
-
 						//Getting the word to use as a key in the level map
-						String wordKey = wordAndStats[2];
+						String wordKey = wordAndStats[wordAndStats.length - 4];
 
 						//Getting the level map
 						Level level = wordlist.getLevelFromName(levelName);
@@ -314,9 +357,9 @@ public class WordList extends ArrayList<Level> {
 						int[] stats = levelMap.get(wordKey);
 
 						//Set each of the stats to be what they are from file
-						stats[0] = Integer.parseInt(wordAndStats[5 - lengthOfLevelName]);
-						stats[1] = Integer.parseInt(wordAndStats[5 - lengthOfLevelName + 1]);
-						stats[2] = Integer.parseInt(wordAndStats[5 - lengthOfLevelName + 2]);
+						stats[0] = Integer.parseInt(wordAndStats[wordAndStats.length - 3]);
+						stats[1] = Integer.parseInt(wordAndStats[wordAndStats.length - 2]);
+						stats[2] = Integer.parseInt(wordAndStats[wordAndStats.length - 1]);
 
 						//Hash the stats and word back into the hashmap
 						levelMap.put(wordKey, stats);
