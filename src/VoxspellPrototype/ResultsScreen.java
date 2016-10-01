@@ -41,6 +41,9 @@ public class ResultsScreen extends Parent {
 	public ResultsScreen(Window window, int correctWords, int wordListLength, String listName, HashMap<String, String> userAttempts) {
 		this._window = window;
 
+		//Updating the users daily goals to show that they have done a quiz
+		MainScreen.addToQuizzesDone();
+		
 		// Create root pane and set its size to whole window
 		VBox root = new VBox(VBX_SPACING);
 		root.setPrefWidth(_window.GetWidth());

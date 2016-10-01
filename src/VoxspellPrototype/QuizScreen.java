@@ -70,6 +70,8 @@ public class QuizScreen extends Parent {
 		} else {
 			_words = WordList.GetWordList().GetRandomFailedWords(wordlistName, VoxspellPrototype.QUIZ_LENGTH);
 		}
+		
+		MainScreen.addToTestedWordsProgress(_words.size());
 
 		// Create root pane and set its size to whole window
 		VBox root = new VBox(VBX_SPACING);
@@ -252,6 +254,7 @@ public class QuizScreen extends Parent {
 				_masteredWords++;
 				speechOutput = speechOutput + "Correct..";
 				WordList.GetWordList().masteredWord(currentWord(), _level);
+				MainScreen.addToMasteredWordsProgress();
 				advance = true;
 				_userAttempts.put(currentWord(), word);
 			} else {

@@ -23,8 +23,8 @@ public class VoxspellPrototype extends Application {
 	private Window _window;
 	
 	private final String WINDOW_TITLE = "VoxSpell";
-	private final int WINDOW_WIDTH = 800;
-	private final int WINDOW_HEIGHT = 500;
+	private final int WINDOW_WIDTH = 900;
+	private final int WINDOW_HEIGHT = 563;
 
 	public VoxspellPrototype() {
 	}
