@@ -6,8 +6,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +19,7 @@ import java.util.Map;
 
 public class WordList extends ArrayList<Level> {
 
+	private static ArrayList<String> _addedWordLists = new ArrayList<String>();
 	private static WordList _instance = null;
 
 	private WordList() {
@@ -28,10 +33,20 @@ public class WordList extends ArrayList<Level> {
 	public static WordList GetWordList() {
 		if (_instance == null) {
 			_instance = initialiseNathansAwesomeDataStructure("NZCER-spelling-lists.txt");
-			loadStatsFromFile(_instance);
+			loadStatsFromFile(new File("Word-Log"));
 		}
 
 		return _instance;
+	}
+
+	/**
+	 * This method stores the paths to all the word lists added to the program
+	 * @param path
+	 */
+	public void addWordList(String path) {
+		if(!_addedWordLists.contains(path)) {
+			_addedWordLists.add(path);
+		}
 	}
 
 	/**
@@ -93,10 +108,63 @@ public class WordList extends ArrayList<Level> {
 	}
 
 	/**
+	 * Loads levels into the existing wordlist
+	 */
+	public static void loadLevel(File f) {
+
+		String levelName = "";
+		boolean lastLineWasWord = false;
+		WordList wordlist = WordList.GetWordList();
+		HashMap<String, int[]> levelHashMap = new HashMap<String, int[]>();
+
+		try {
+			//Creating the reader to loop through each line in the text file
+			BufferedReader textFileReader = new BufferedReader(new FileReader(f));
+
+			String line; 
+
+			while((line = textFileReader.readLine()) != null) {
+
+				//If the first char is % then its the name of the level
+				if(line.charAt(0) == '%') {
+
+					if(lastLineWasWord) {
+						Level level = new Level(levelName, levelHashMap);
+						wordlist.add(level);
+					}
+
+					levelName = line.substring(1, line.length());
+
+					//Create the hashmap for that level
+					levelHashMap = new HashMap<String, int[]>();
+
+					lastLineWasWord = false;
+
+				} else {
+
+					//Hashing each word to the level hashmap
+					levelHashMap.put(line, new int[3]);
+
+					lastLineWasWord = true;
+				}
+
+			}
+			//Adding the last level in to the list
+			Level level = new Level(levelName, levelHashMap);
+			wordlist.add(level);
+			textFileReader.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Saves all the stats currently in the WordList to a text file
 	 */
 	public void saveWordListToDisk() {
 		File f = new File("Word-Log");
+		File paths = new File("Loaded-Files");
+		File dailyGoals = new File("Daily-Goals");
 
 		try {
 
@@ -104,8 +172,41 @@ public class WordList extends ArrayList<Level> {
 			f.delete();
 			f.createNewFile();
 
+			paths.delete();
+			paths.createNewFile();
+
+			dailyGoals.delete();
+			dailyGoals.createNewFile();
+
+
+			BufferedWriter pathsFileWriter = new BufferedWriter(new FileWriter(paths));
+
+			//Saving all the paths to file
+			for(int i = 0; i < _addedWordLists.size(); i++) {
+				pathsFileWriter.append(_addedWordLists.get(i) + "\n");
+			}
+
+			pathsFileWriter.close();
+
+			//Saving the daily goals to file
+			BufferedWriter dailyGoalsFileWriter = new BufferedWriter(new FileWriter(dailyGoals));
+
+			DateFormat todaysDate = new SimpleDateFormat("yyyy/MM/dd");
+			Date date = new Date();
+
+			dailyGoalsFileWriter.append(todaysDate.format(date) + "\n");
+
+			double[] goals = MainScreen.getDailyGoals();
+
+			for(int i = 0; i < goals.length; i++) {
+				dailyGoalsFileWriter.append(goals[i] + "\n");
+			}
+
+			dailyGoalsFileWriter.close();
+
 			BufferedWriter textFileWriter = new BufferedWriter(new FileWriter(f));
 
+			//Saving all the words stats to file
 			for(int i = 0; i < this.size(); i++) {
 				//Getting a level from the hash map
 				Level level = this.get(i);
@@ -163,7 +264,6 @@ public class WordList extends ArrayList<Level> {
 				}
 			}
 
-
 			textFileWriter.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -171,17 +271,80 @@ public class WordList extends ArrayList<Level> {
 	}
 
 	/**
-	 * Loads stats from the Word-Log file into the WordList object
+	 * Loads stats from any Word-Log file into the WordList object
 	 * 
 	 * @param wordList
 	 * @return WordList
 	 */
-	private static WordList loadStatsFromFile(WordList wordList) {
-		File savedWords = new File("Word-Log");
+	private static WordList loadStatsFromFile(File f) {
+		File savedWords = f;
 
 		WordList wordlist = WordList.GetWordList();
 
 		try {
+
+			//Loading in all the previously loaded files
+			File pathsToWordLists = new File("Loaded-Files");
+			if(pathsToWordLists.exists()) {
+				BufferedReader pathsReader = new BufferedReader(new FileReader(pathsToWordLists));
+
+				String path = "";
+				while((path = pathsReader.readLine()) != null) {
+					File wordlistToLoad = new File(path);
+					if(wordlistToLoad.exists()) {
+						loadLevel(wordlistToLoad);
+						_addedWordLists.add(path);
+					} else {
+						PopupWindow.DeployPopupWindow("The file loaded from " + path + " does not exist!");
+					}
+				}
+				pathsReader.close();
+			}
+
+
+			//Loading in all the daily goals
+			File dailyGoals = new File("Daily-Goals");
+
+			if(dailyGoals.exists()) {
+				BufferedReader dailyGoalsReader = new BufferedReader(new FileReader(dailyGoals));
+				String line = "";
+
+				DateFormat todaysDate = new SimpleDateFormat("yyyy/MM/dd");
+				Date date = new Date();
+
+				boolean isToday = false;
+				if((line = dailyGoalsReader.readLine()) != null) {
+					if(line.equals(todaysDate.format(date))) {
+						isToday = true;
+					}
+				}
+
+				if(isToday) {
+					//Getting tested words
+					if((line = dailyGoalsReader.readLine()) != null) {
+						MainScreen.addToTestedWordsProgress((int)Double.parseDouble(line));
+					}
+
+					//Getting mastered words
+					if((line = dailyGoalsReader.readLine()) != null) {
+						double mastered = Double.parseDouble(line);
+						for(int i = 0; i < mastered; i++) {
+							MainScreen.addToMasteredWordsProgress();
+						}
+					}
+
+					//Getting quizzes done
+					if((line = dailyGoalsReader.readLine()) != null) {
+						double quizzesDone = Double.parseDouble(line);
+						for(int i = 0; i < quizzesDone; i++) {
+							MainScreen.addToQuizzesDone();
+						}
+					}
+
+				}
+
+				dailyGoalsReader.close();
+			}
 
 			//Reading words from file if they exist
 			if(savedWords.exists()) {
@@ -194,7 +357,7 @@ public class WordList extends ArrayList<Level> {
 						line = line.replaceAll("unlock ", "");
 						//Loop through all levels to find the right one and unlock it
 						for(int i = 0 ; i < wordlist.size(); i++) {
-							Level level = wordList.get(i);
+							Level level = wordlist.get(i);
 							String levelName = level.levelName();
 							if(levelName.equals(line)) {
 								level.unlockLevel();
@@ -216,13 +379,13 @@ public class WordList extends ArrayList<Level> {
 						//Getting the level associated with the word and adding the word to its failed list
 						Level level = wordlist.getLevelFromName(levelName);
 						level.addToFailed(splitLine[splitLine.length - 1]);
-						
+
 						//Else if the word needs to be added to the mastered list
 					} else if (line.contains("mastered")) {
 						line = line.replaceAll("mastered ", "");
 						String[] splitLine = line.split("\\s+");
 						String levelName = "";
-						
+
 						//Getting the level name
 						for(int i = 0; i < splitLine.length - 1; i++) {
 							if(i != splitLine.length - 2) {
@@ -234,26 +397,25 @@ public class WordList extends ArrayList<Level> {
 						//Getting the level associated with the word and adding the word to its mastered list
 						Level level = wordlist.getLevelFromName(levelName);
 						level.addToMastered(splitLine[splitLine.length - 1]);
-						
+
 						//Else its the stats for a word
 					} else {
 						//Splitting each line by spaces
 						String[] wordAndStats = line.split("\\s+"); 
 
 						//Getting the key for the level hash map
-						int lengthOfLevelName = 1 + wordAndStats.length - 5;
+						int lengthOfLevelName = wordAndStats.length - 4;
 						String levelName = "";
 						for(int i = 0; i < lengthOfLevelName; i++) {
-							if(i != lengthOfLevelName - 1) {
+							if(i != lengthOfLevelName - 1 && lengthOfLevelName > 1) {
 								levelName += wordAndStats[i] + " ";
 							} else {
 								levelName += wordAndStats[i];	
 							}
 						}
 						levelName.trim();
-
 						//Getting the word to use as a key in the level map
-						String wordKey = wordAndStats[2];
+						String wordKey = wordAndStats[wordAndStats.length - 4];
 
 						//Getting the level map
 						Level level = wordlist.getLevelFromName(levelName);
@@ -263,9 +425,9 @@ public class WordList extends ArrayList<Level> {
 						int[] stats = levelMap.get(wordKey);
 
 						//Set each of the stats to be what they are from file
-						stats[0] = Integer.parseInt(wordAndStats[5 - lengthOfLevelName]);
-						stats[1] = Integer.parseInt(wordAndStats[5 - lengthOfLevelName + 1]);
-						stats[2] = Integer.parseInt(wordAndStats[5 - lengthOfLevelName + 2]);
+						stats[0] = Integer.parseInt(wordAndStats[wordAndStats.length - 3]);
+						stats[1] = Integer.parseInt(wordAndStats[wordAndStats.length - 2]);
+						stats[2] = Integer.parseInt(wordAndStats[wordAndStats.length - 1]);
 
 						//Hash the stats and word back into the hashmap
 						levelMap.put(wordKey, stats);
@@ -279,7 +441,7 @@ public class WordList extends ArrayList<Level> {
 		}
 
 
-		return wordList;
+		return wordlist;
 	}
 
 	/**
@@ -293,7 +455,6 @@ public class WordList extends ArrayList<Level> {
 		File wordList = new File(fileName);
 
 		String line;
-		int lvlCounter = 1;
 		String levelName = "";
 		boolean lastLineWasWord = false;
 

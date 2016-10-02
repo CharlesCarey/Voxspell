@@ -3,6 +3,8 @@ package VoxspellPrototype;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -10,15 +12,16 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 
 public class QuizScreen extends Parent {
 
@@ -46,13 +49,15 @@ public class QuizScreen extends Parent {
 	private final Text _txtProgress;
 	private TextField _tfdAttempt;
 	private String _level;
+	private Label _Counter = new Label();
 
 	private List<String> _words;
 	private int _wordIndex = 0;
+	private int _time = 30;
 	private boolean _firstGuess = true;
 	private int _masteredWords = 0;
 	private HashMap<String, String> _userAttempts = new HashMap<String, String>();
-	
+
 
 	public QuizScreen(Window window, String wordlistName, LevelSelectionScreen.QuizType quizType) {
 		this._window = window;
@@ -65,6 +70,8 @@ public class QuizScreen extends Parent {
 		} else {
 			_words = WordList.GetWordList().GetRandomFailedWords(wordlistName, VoxspellPrototype.QUIZ_LENGTH);
 		}
+		
+		MainScreen.addToTestedWordsProgress(_words.size());
 
 		// Create root pane and set its size to whole window
 		VBox root = new VBox(VBX_SPACING);
@@ -89,14 +96,23 @@ public class QuizScreen extends Parent {
 		_txtProgress.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
+		//Create count down timer
+		_Counter.setText("30");
+		_Counter.prefWidth(_window.GetWidth());
+		_Counter.setTextAlignment(TextAlignment.CENTER);
+		_Counter.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
+				" -fx-fill: " + TXT_FONT_COLOR + ";");
+
 		// Add all nodes to root pane
-		root.getChildren().addAll(_txtQuiz, buildCenterPane(BTN_HEIGHT), _txtProgress);
+		root.getChildren().addAll(_txtQuiz, _Counter, buildCenterPane(BTN_HEIGHT), _txtProgress);
 
 		// Add root pane to parent
 		this.getChildren().addAll(root);
 
 		// Color background
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
+		
+		
 
 		new FestivalSpeakTask("Spell " + currentWord()).run();
 	}
@@ -160,7 +176,38 @@ public class QuizScreen extends Parent {
 			}	
 		});
 
+		printTimer();
+
 		return centerPane;
+	}
+
+	/**
+	 * This method prints out the timer
+	 * @return 
+	 */
+	private void printTimer() {
+		//Set up timer
+		_time = 30;
+		final Timeline countDownTimer = new Timeline();
+		KeyFrame keyframe = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				_time = _time - 1; 
+				if(_time >= 0) {
+					_Counter.setText("" + _time);	
+				} else {
+					_time = 30;
+					_Counter.setText("" + _time);	
+					attemptWord(_tfdAttempt.getText());
+				}
+			}
+
+		});
+		countDownTimer.setCycleCount(Timeline.INDEFINITE);
+		countDownTimer.getKeyFrames().add(keyframe);
+		countDownTimer.play();
+
 	}
 
 	/**
@@ -207,6 +254,7 @@ public class QuizScreen extends Parent {
 				_masteredWords++;
 				speechOutput = speechOutput + "Correct..";
 				WordList.GetWordList().masteredWord(currentWord(), _level);
+				MainScreen.addToMasteredWordsProgress();
 				advance = true;
 				_userAttempts.put(currentWord(), word);
 			} else {
@@ -250,7 +298,7 @@ public class QuizScreen extends Parent {
 			_wordIndex++;
 			_firstGuess = true;
 			_txtProgress.setText("\nCorrect: " + _masteredWords + "/" + _words.size());
-			
+
 			return true;
 		} else {
 			// No words left to spell

@@ -10,8 +10,8 @@ import javafx.stage.WindowEvent;
 public class VoxspellPrototype extends Application {
 
 	// Global constants (naughty public static!!)
-	public static final String LIGHT_BLUE = "#9ad3de";
-	public static final String DARK_BLUE = "#89bdd3";
+	public static final String LIGHT_BLUE = "#A7DBDB";
+	public static final String DARK_BLUE = "#FFD464";
 	public static final String WHITE = "#e3e3e3";
 	public static final String DARK = "#c9c9c9";
 	public static final String MEDIA_SOURCE = "/home/nathan/workspace/ccar-nkea_se206-a03/media/bunny.mp4";
@@ -23,8 +23,8 @@ public class VoxspellPrototype extends Application {
 	private Window _window;
 	
 	private final String WINDOW_TITLE = "VoxSpell";
-	private final int WINDOW_WIDTH = 800;
-	private final int WINDOW_HEIGHT = 500;
+	private final int WINDOW_WIDTH = 900;
+	private final int WINDOW_HEIGHT = 563;
 
 	public VoxspellPrototype() {
 	}
