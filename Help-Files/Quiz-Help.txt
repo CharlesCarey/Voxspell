@@ -1,0 +1,5 @@
+Quiz Help
+
+Pressing the ‘New Quiz’ button brings up the level selection menu where you may choose a level. Once you choose one of the levels a quiz will start! You will have two chances per word to get it correct.
+
+Pressing the ‘Review Quiz’ button does the same as the ‘New Quiz’ button but you are instead tested on words you have failed, gotten after both attempts.

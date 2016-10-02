@@ -1,0 +1,5 @@
+Stats Help
+
+Pressing the ‘View Stats’ button will show you all the statistics for every level. Each level’s statistics are stored in its own tab. You can sort the statistics by alphabetical order, or by mastered, failed and faulted rates!
+
+Pressing the ‘Clear Stats’ button will clear all of your attempt history for every level you have done quizzes for. Don’t worry! The levels you have unlocked will stay unlocked! 

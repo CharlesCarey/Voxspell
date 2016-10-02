@@ -14,6 +14,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -21,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 
 public class MainScreen extends Parent {
@@ -102,6 +105,38 @@ public class MainScreen extends Parent {
 		Menu helpMenu = new Menu();
 		helpMenu.setText("Help");
 
+		MenuItem quizHelp = new MenuItem("Quiz Help");
+		quizHelp.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				new HelpScreen("Help-Files/Quiz-Help.txt");
+			}
+			
+		});
+		
+		MenuItem statsHelp = new MenuItem("Stats Help");
+		statsHelp.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				new HelpScreen("Help-Files/Stats-Help.txt");
+			}
+			
+		});
+
+		MenuItem optionsHelp = new MenuItem("Options Help");
+		optionsHelp.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				new HelpScreen("Help-Files/Options-Help.txt");
+			}
+			
+		});
+		
+		helpMenu.getItems().addAll(quizHelp, statsHelp, optionsHelp);
+		
 		menuBar.getMenus().addAll(fileMenu, helpMenu);
 
 		Pane dailyGoalsPane = buildDailyGoals(root.getPrefWidth()
@@ -328,6 +363,13 @@ public class MainScreen extends Parent {
 
 		btnOptions.setMinWidth(menuButtons.getPrefWidth()); 
 		btnOptions.setPrefHeight(Integer.MAX_VALUE);
+		
+		//Add tooltips for buttons
+		btnNew.setTooltip(new Tooltip("Click to start a new quiz!"));
+		btnReview.setTooltip(new Tooltip("Click to start a quiz to review your failed words!"));
+		btnStats.setTooltip(new Tooltip("Click to see your attempt history!"));
+		btnClear.setTooltip(new Tooltip("Click to clear the statistics!"));
+		btnOptions.setTooltip(new Tooltip("Click change the settings!"));
 
 		//Add buttons to their respective grouping
 		VBox quizButtonsVB = new VBox(BUTTON_SEPERATION);
