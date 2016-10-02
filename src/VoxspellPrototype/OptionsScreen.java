@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -99,7 +100,24 @@ public class OptionsScreen extends Parent {
 		voiceSpeedComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + " arial; -fx-text-fill: " + TXT_FONT_COLOR + ";");
 		voiceSpeedComboBox.setPrefHeight(CMB_HEIGHT);
 		voiceSpeedComboBox.setPrefWidth(CMB_WIDTH);
-		//voiceSpeedComboBox.setPromptText("Choose a voice speed");
+		voiceSpeedComboBox.setTooltip(new Tooltip("Select a talking speed"));
+		
+		double voiceSpeed = FestivalSpeakTask.getSpeed();
+		
+		int voiceSpeedOptionsIndex = 0;
+		
+		if(voiceSpeed == 1) {
+			//Normal voice
+			voiceSpeedOptionsIndex = 0;
+		} else if (voiceSpeed == 1.5) {
+			//Slow voice
+			voiceSpeedOptionsIndex = 1;
+		} else if (voiceSpeed == 2) {
+			//Very slow voice
+			voiceSpeedOptionsIndex = 2;
+		}
+		
+		voiceSpeedComboBox.setValue(voiceSpeedOptions.get(voiceSpeedOptionsIndex));
 
 		Label voiceSpeedLabel = new Label("Select voice speed");
 		voiceSpeedLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" + 
@@ -118,8 +136,22 @@ public class OptionsScreen extends Parent {
 
 		final ChoiceBox<String> voiceTypeComboBox = new ChoiceBox<String>(voiceTypeOptions);
 		voiceTypeComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + " arial; -fx-text-fill: " + TXT_FONT_COLOR + ";");
+		voiceTypeComboBox.setTooltip(new Tooltip("Select a voice"));
 		
-		//voiceTypeComboBox.setPromptText("Choose a voice");
+		String voiceSelected = FestivalSpeakTask.getVoice();
+		
+		int voiceTypeOptionsIndex = 0;
+				
+		if(voiceSelected.equals("kal_diphone")) {
+			voiceTypeOptionsIndex = 0;
+		} else if (voiceSelected.equals("rab_diphone")) {
+			voiceTypeOptionsIndex = 1;
+		} else if (voiceSelected.equals("akl_nz_jdt_diphone")) {
+			voiceTypeOptionsIndex = 2;
+		} 
+		
+		voiceTypeComboBox.setValue(voiceTypeOptions.get(voiceTypeOptionsIndex));
+		
 		voiceTypeComboBox.setPrefHeight(CMB_HEIGHT);
 		voiceTypeComboBox.setPrefWidth(CMB_WIDTH);
 
@@ -142,7 +174,7 @@ public class OptionsScreen extends Parent {
 					voice = "kal_diphone";
 				} else if (newValue.equals("Male Voice 2")) {
 					voice = "rab_diphone";
-				} else if (newValue.equals("New Zealand Male Voice")) {
+				} else if (newValue.equals("New Zealand Male Voice                                                 ")) {
 					voice = "akl_nz_jdt_diphone";
 				}
 				FestivalSpeakTask.changeVoice(voice);

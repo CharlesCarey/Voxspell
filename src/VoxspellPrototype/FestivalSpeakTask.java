@@ -33,6 +33,22 @@ class FestivalSpeakTask extends Task<Void> {
 	public static void changeVoice(String voice) {
 		_voice = voice;
 	}
+	
+	/**
+	 * Getting the currently set voice
+	 * @return voice
+	 */
+	public static String getVoice() {
+		return _voice;
+	}
+	
+	/**
+	 * Getting the currently set voice speed
+	 * @return voice
+	 */
+	public static double getSpeed() {
+		return _speed;
+	}
 
 	@Override
 	protected Void call() throws Exception {

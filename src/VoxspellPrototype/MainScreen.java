@@ -54,11 +54,11 @@ public class MainScreen extends Parent {
 	private final int TEXT_CEILING_SEPERATION = 160;
 
 	//Fields for users daily progress
-	private static double _testedWords = 40;
+	private static double _testedWords = 0;
 	private static double _dailyGoalTestedWords = 40;
-	private static double _masteredWords = 15;
+	private static double _masteredWords = 0;
 	private static double _dailyGoalMasteredWords = 20;
-	private static double _quizzesDone = 3;
+	private static double _quizzesDone = 0;
 	private static double _dailyGoalQuizzes = 5;
 
 
@@ -123,6 +123,9 @@ public class MainScreen extends Parent {
 
 	private Pane buildDailyGoals(double desiredWidth) {
 
+		//Loading in the daily goals
+		WordList.GetWordList();
+		
 		//Making VBox so user can track progress
 		VBox dailyGoalsVBox = new VBox(50);
 		dailyGoalsVBox.setPrefWidth(desiredWidth);
@@ -423,6 +426,11 @@ public class MainScreen extends Parent {
 	
 	public static void addToQuizzesDone() {
 		_quizzesDone += 1;
+	}
+	
+	public static double[] getDailyGoals() {
+		double[] dailyGoals = {_testedWords, _masteredWords, _quizzesDone};
+		return dailyGoals;
 	}
 
 }

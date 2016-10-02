@@ -7,8 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -161,6 +164,7 @@ public class WordList extends ArrayList<Level> {
 	public void saveWordListToDisk() {
 		File f = new File("Word-Log");
 		File paths = new File("Loaded-Files");
+		File dailyGoals = new File("Daily-Goals");
 
 		try {
 
@@ -171,6 +175,10 @@ public class WordList extends ArrayList<Level> {
 			paths.delete();
 			paths.createNewFile();
 
+			dailyGoals.delete();
+			dailyGoals.createNewFile();
+
+
 			BufferedWriter pathsFileWriter = new BufferedWriter(new FileWriter(paths));
 
 			//Saving all the paths to file
@@ -179,6 +187,22 @@ public class WordList extends ArrayList<Level> {
 			}
 
 			pathsFileWriter.close();
+
+			//Saving the daily goals to file
+			BufferedWriter dailyGoalsFileWriter = new BufferedWriter(new FileWriter(dailyGoals));
+
+			DateFormat todaysDate = new SimpleDateFormat("yyyy/MM/dd");
+			Date date = new Date();
+
+			dailyGoalsFileWriter.append(todaysDate.format(date) + "\n");
+
+			double[] goals = MainScreen.getDailyGoals();
+
+			for(int i = 0; i < goals.length; i++) {
+				dailyGoalsFileWriter.append(goals[i] + "\n");
+			}
+
+			dailyGoalsFileWriter.close();
 
 			BufferedWriter textFileWriter = new BufferedWriter(new FileWriter(f));
 
@@ -277,6 +301,50 @@ public class WordList extends ArrayList<Level> {
 				pathsReader.close();
 			}
 
+
+			//Loading in all the daily goals
+			File dailyGoals = new File("Daily-Goals");
+
+			if(dailyGoals.exists()) {
+				BufferedReader dailyGoalsReader = new BufferedReader(new FileReader(dailyGoals));
+				String line = "";
+
+				DateFormat todaysDate = new SimpleDateFormat("yyyy/MM/dd");
+				Date date = new Date();
+
+				boolean isToday = false;
+				if((line = dailyGoalsReader.readLine()) != null) {
+					if(line.equals(todaysDate.format(date))) {
+						isToday = true;
+					}
+				}
+
+				if(isToday) {
+					//Getting tested words
+					if((line = dailyGoalsReader.readLine()) != null) {
+						MainScreen.addToTestedWordsProgress((int)Double.parseDouble(line));
+					}
+
+					//Getting mastered words
+					if((line = dailyGoalsReader.readLine()) != null) {
+						double mastered = Double.parseDouble(line);
+						for(int i = 0; i < mastered; i++) {
+							MainScreen.addToMasteredWordsProgress();
+						}
+					}
+
+					//Getting quizzes done
+					if((line = dailyGoalsReader.readLine()) != null) {
+						double quizzesDone = Double.parseDouble(line);
+						for(int i = 0; i < quizzesDone; i++) {
+							MainScreen.addToQuizzesDone();
+						}
+					}
+
+				}
+
+				dailyGoalsReader.close();
+			}
 
 			//Reading words from file if they exist
 			if(savedWords.exists()) {

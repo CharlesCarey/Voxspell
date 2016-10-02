@@ -84,41 +84,41 @@ public class LevelSelectionScreen extends Parent {
 		//If the user has unlocked levels then go straight to the Level Selection Screen
 		if(WordList.GetWordList().size() > 0 && WordList.GetWordList().get(0).isUnlocked()) {
 			GenerateLevelSelectionScreen();
-			
-		//Else if the word log doesn't exist then let the user choose what level they want to start at
+
+			//Else if the word log doesn't exist then let the user choose what level they want to start at
 		} else if(!wordlog.exists()) {
 			ChooseLevelScreen(0, WordList.GetWordList().size());
-		}
+		} else {
 
-		//Or if the Word-Log file is there, then check if it is empty or not to decide which screen to show
-		try {
-			BufferedReader r = new BufferedReader(new FileReader(wordlog));
+			//Or if the Word-Log file is there, then check if it is empty or not to decide which screen to show
+			try {
+				BufferedReader r = new BufferedReader(new FileReader(wordlog));
 
-			if(r.readLine() == null) {
-				ChooseLevelScreen(0, WordList.GetWordList().size());
-			} else {
-				GenerateLevelSelectionScreen();
+				if(r.readLine() == null) {
+					ChooseLevelScreen(0, WordList.GetWordList().size());
+				} else {
+					GenerateLevelSelectionScreen();
+				}
+
+				r.close();
+			} catch (IOException e) {
+
 			}
 
-			r.close();
-		} catch (IOException e) {
-
 		}
-
-
 	}
 
 	/**
 	 * This generates the screen where users can choose which level to start at
 	 */
 	public void ChooseLevelScreen(int startLevel, int endLevel) {
-		
+
 		//Get the WordList
 		final WordList wordlist = WordList.GetWordList();
 
 		//Create the data structure for the level ComboBox
 		ObservableList<String> options = FXCollections.observableArrayList();
-		
+
 		//Getting the names of each level and adding it to the options list
 		for(int i = startLevel; i < endLevel; i++) {
 			Level level = wordlist.get(i);
@@ -140,7 +140,7 @@ public class LevelSelectionScreen extends Parent {
 		levelSelectLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		levelSelectLabel.setWrappingWidth(_window.GetWidth());
-		
+
 		root.setStyle("-fx-background-color: " + BACK_COLOR);
 		root.setPadding(new Insets(SELECTION_BAR_PADDING));
 		root.setPrefHeight(_window.GetHeight());
@@ -233,7 +233,7 @@ public class LevelSelectionScreen extends Parent {
 			final String listName = level.levelName();
 
 			final Button btn = new Button();
-			
+
 			//Showing current mastered or failed stats depending on type of quiz selected
 			switch (_quizType) {
 			case NORMAL_QUIZ:
@@ -245,7 +245,7 @@ public class LevelSelectionScreen extends Parent {
 			default:
 				break;
 			}
-			
+
 			btn.setPrefWidth(BTN_WIDTH);
 			btn.setPrefHeight(BTN_HEIGHT);
 
@@ -262,8 +262,8 @@ public class LevelSelectionScreen extends Parent {
 							_window.SetWindowScene(new Scene(new QuizScreen(_window, listName, _quizType), _window.GetWidth(), _window.GetHeight()));
 						}
 					});
-					
-				//Else this level is locked so grey out the button and tell the user it is locked if they try to click on it
+
+					//Else this level is locked so grey out the button and tell the user it is locked if they try to click on it
 				} else {
 					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 							" -fx-base: " + BTN_LOCKED_COLOR + ";" + 
@@ -291,8 +291,8 @@ public class LevelSelectionScreen extends Parent {
 								PopupWindow.DeployPopupWindow("You currently have no words to review!");
 							}
 						});
-					
-					//Else let the button have full functionality for a review quiz
+
+						//Else let the button have full functionality for a review quiz
 					} else {
 						btn.setOnAction(new EventHandler<ActionEvent>() {
 							@Override
@@ -301,8 +301,8 @@ public class LevelSelectionScreen extends Parent {
 							}
 						});
 					}
-					
-				//Else the level is not unlocked so grey it out and let the user know it is locked if they click on it
+
+					//Else the level is not unlocked so grey it out and let the user know it is locked if they click on it
 				} else {
 					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 							" -fx-base: " + BTN_LOCKED_COLOR + ";" + 
@@ -349,7 +349,7 @@ public class LevelSelectionScreen extends Parent {
 
 			// Check if window contains mouse.
 			if (windowBounds.contains(mousePoint)) {
-				
+
 				// Get mouse coordinates relative to the windows space.
 				Point relMousePoint = new Point(
 						(int) (mousePoint.getY() - windowBounds.getY() - 30), 
@@ -359,25 +359,25 @@ public class LevelSelectionScreen extends Parent {
 				double dist = relMousePoint.getX() < (_window.GetHeight() / 2) ? 
 						relMousePoint.getX() : _window.GetHeight() - relMousePoint.getX();
 						dist = Math.abs(dist);		
-						
-				// Only scroll if within certain range of screen edge.
-				if (Math.abs(dist) < SCROLL_EDGE_SIZE) {
-					double scrollSpeed = SCROLL_SENSITIVITY / dist;	
-					
-					// Get distance from top or bottom edge
-					if (relMousePoint.getX() < _window.GetHeight() / 2) {
-						_scrollPosition = _scrollPosition + scrollSpeed;
-					} else {
-						_scrollPosition = _scrollPosition - scrollSpeed;
-					}
-					
-					// Calculate scroll position
-					_scrollPosition = Math.min(0, _scrollPosition);
-					_scrollPosition = Math.max(-(_levelButtons.getHeight() - _window.GetHeight()), _scrollPosition);
-					
-					// Translate scroll buttons
-					_levelButtons.setTranslateY(_scrollPosition);
-				}
+
+						// Only scroll if within certain range of screen edge.
+						if (Math.abs(dist) < SCROLL_EDGE_SIZE) {
+							double scrollSpeed = SCROLL_SENSITIVITY / dist;	
+
+							// Get distance from top or bottom edge
+							if (relMousePoint.getX() < _window.GetHeight() / 2) {
+								_scrollPosition = _scrollPosition + scrollSpeed;
+							} else {
+								_scrollPosition = _scrollPosition - scrollSpeed;
+							}
+
+							// Calculate scroll position
+							_scrollPosition = Math.min(0, _scrollPosition);
+							_scrollPosition = Math.max(-(_levelButtons.getHeight() - _window.GetHeight()), _scrollPosition);
+
+							// Translate scroll buttons
+							_levelButtons.setTranslateY(_scrollPosition);
+						}
 			}
 		}	
 	};
