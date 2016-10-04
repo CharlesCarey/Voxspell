@@ -231,7 +231,7 @@ public class QuizScreen extends Parent {
 	 */
 	private void printTimer() {
 		//Set up timer
-		_time = 30;
+		_time = 31;
 		final Timeline countDownTimer = new Timeline();
 		KeyFrame keyframe = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
 
@@ -241,7 +241,7 @@ public class QuizScreen extends Parent {
 				if(_time >= 0) {
 					_Counter.setText("" + _time);
 				} else {
-					_time = 30;
+					_time = 31;
 					_Counter.setText("" + _time);	
 
 					if(_tfdAttempt.getText().isEmpty()) {
@@ -301,15 +301,19 @@ public class QuizScreen extends Parent {
 			if (correct) {
 				// Correct on first guess
 				_correctWords++;
+				SoundPlayer.userWasCorrect(true);
+				new SoundPlayer().run();
 				speechOutput = speechOutput + "Correct..";
 				WordList.GetWordList().masteredWord(currentWord(), _level);
 				MainScreen.addToMasteredWordsProgress();
 				advance = true;
-				_time = 30;
+				_time = 31;
 				_userAttempts.put(currentWord(), word);
 			} else {
 				// Incorrect on first guess
-				_time = 30;
+				_time = 31;
+				SoundPlayer.userWasCorrect(false);
+				new SoundPlayer().run();
 				speechOutput = speechOutput + "Incorrect.. try again.. " + currentWord() + ".. " + currentWord() + ".";
 				_firstGuess = false;
 			}
@@ -317,14 +321,16 @@ public class QuizScreen extends Parent {
 			if (correct) {
 				// Correct on second guess
 				_correctWords++;
-				_time = 30;
+				_time = 31;
 				speechOutput = speechOutput + "Correct..";
 				WordList.GetWordList().faultedWord(currentWord(), _level);
 				advance = true;
 				_userAttempts.put(currentWord(), word);
 			} else {
 				// Incorrect on second guess
-				_time = 30;
+				_time = 31;
+				SoundPlayer.userWasCorrect(false);
+				new SoundPlayer().run();
 				speechOutput = speechOutput + "Incorrect..";
 				WordList.GetWordList().failedWord(currentWord(), _level);
 				advance = true;
