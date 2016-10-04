@@ -39,7 +39,7 @@ public class WordListLoader extends Parent{
 			WordList.GetWordList().addWordList(newWordList.getAbsolutePath());
 			ChooseLevelScreen(levelStart, levelEnd);
 		} else {
-			PopupWindow.DeployPopupWindow("The file type appears to be invalid. Please try again!");
+			PopupWindow.DeployPopupWindow("Warning!", "The file type appears to be invalid. Please try again!");
 		}
 	}
 

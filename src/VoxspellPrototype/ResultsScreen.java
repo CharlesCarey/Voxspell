@@ -136,7 +136,7 @@ public class ResultsScreen extends Parent {
 				// Deploy popup to inform user of new quiz level.
 				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
 					if (level != null && !level.equals(""))
-						PopupWindow.DeployPopupWindow(level + " unlocked!");
+						PopupWindow.DeployPopupWindow("Congratulations!", level + " unlocked!");
 				}
 			}
 		}	

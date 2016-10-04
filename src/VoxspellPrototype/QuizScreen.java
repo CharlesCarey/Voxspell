@@ -1,5 +1,14 @@
 package VoxspellPrototype;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,14 +20,18 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
@@ -29,6 +42,7 @@ public class QuizScreen extends Parent {
 
 	private final String BTN_SPEAK_TEXT = "Speak";
 	private final String BTN_ENTER_TEXT = "Enter";
+	private final String BTN_DEF_TEXT = "Definition";
 	private final int HBX_SPACING = 10;
 	private final int VBX_SPACING = 50;
 	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
@@ -55,7 +69,7 @@ public class QuizScreen extends Parent {
 	private int _wordIndex = 0;
 	private int _time = 30;
 	private boolean _firstGuess = true;
-	private int _masteredWords = 0;
+	private int _correctWords = 0;
 	private HashMap<String, String> _userAttempts = new HashMap<String, String>();
 
 
@@ -70,7 +84,7 @@ public class QuizScreen extends Parent {
 		} else {
 			_words = WordList.GetWordList().GetRandomFailedWords(wordlistName, VoxspellPrototype.QUIZ_LENGTH);
 		}
-		
+
 		MainScreen.addToTestedWordsProgress(_words.size());
 
 		// Create root pane and set its size to whole window
@@ -81,7 +95,7 @@ public class QuizScreen extends Parent {
 
 
 		// Create quiz title text
-		_txtQuiz = new Text("Quiz\n\n");
+		_txtQuiz = new Text("Quiz\n");
 		_txtQuiz.prefWidth(_window.GetWidth());
 		_txtQuiz.setTextAlignment(TextAlignment.CENTER);
 		_txtQuiz.setWrappingWidth(_window.GetWidth());
@@ -89,7 +103,7 @@ public class QuizScreen extends Parent {
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 		// Create score progress counter text
-		_txtProgress = new Text("\nCorrect: 0/" + _words.size());
+		_txtProgress = new Text("\nCorrect: 0/" + _wordIndex);
 		_txtProgress.prefWidth(_window.GetWidth());
 		_txtProgress.setTextAlignment(TextAlignment.CENTER);
 		_txtProgress.setWrappingWidth(_window.GetWidth() - (SIDE_PADDING * 2));
@@ -104,20 +118,22 @@ public class QuizScreen extends Parent {
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 		// Add all nodes to root pane
-		root.getChildren().addAll(_txtQuiz, _Counter, buildCenterPane(BTN_HEIGHT), _txtProgress);
+		root.getChildren().addAll(_txtQuiz, buildCenterGUIQuizPane(BTN_HEIGHT), _txtProgress);
 
 		// Add root pane to parent
 		this.getChildren().addAll(root);
 
 		// Color background
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
-		
-		
 
 		new FestivalSpeakTask("Spell " + currentWord()).run();
 	}
 
-	private Pane buildCenterPane(double desiredHeight) {
+
+	private Pane buildCenterGUIQuizPane(double desiredHeight) {
+
+		VBox root = new VBox(HBX_SPACING);
+
 		// Build center pane
 		HBox centerPane = new HBox(HBX_SPACING);
 
@@ -176,9 +192,34 @@ public class QuizScreen extends Parent {
 			}	
 		});
 
+		HBox defBox = new HBox(HBX_SPACING);
+		defBox.setAlignment(Pos.CENTER);
+
+		Button btnDefinition = new Button(BTN_DEF_TEXT);
+
+		btnDefinition.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+				" -fx-base: " + BTN_COLOR + ";" + 
+				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+		btnDefinition.setPrefWidth(BTN_WIDTH);
+		btnDefinition.setPrefHeight(BTN_HEIGHT);
+
+		btnDefinition.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+
+				getDefinition(currentWord());
+
+			}
+
+		});
+
+		defBox.getChildren().add(btnDefinition);
+		root.getChildren().addAll(centerPane, defBox);
+
 		printTimer();
 
-		return centerPane;
+		return root;
 	}
 
 	/**
@@ -251,7 +292,7 @@ public class QuizScreen extends Parent {
 		if (_firstGuess) {
 			if (correct) {
 				// Correct on first guess
-				_masteredWords++;
+				_correctWords++;
 				speechOutput = speechOutput + "Correct..";
 				WordList.GetWordList().masteredWord(currentWord(), _level);
 				MainScreen.addToMasteredWordsProgress();
@@ -265,6 +306,7 @@ public class QuizScreen extends Parent {
 		} else {
 			if (correct) {
 				// Correct on second guess
+				_correctWords++;
 				speechOutput = speechOutput + "Correct..";
 				WordList.GetWordList().faultedWord(currentWord(), _level);
 				advance = true;
@@ -297,12 +339,12 @@ public class QuizScreen extends Parent {
 			// There are words left to spell
 			_wordIndex++;
 			_firstGuess = true;
-			_txtProgress.setText("\nCorrect: " + _masteredWords + "/" + _words.size());
+			_txtProgress.setText("\nCorrect: " + _correctWords + "/" + _wordIndex);
 
 			return true;
 		} else {
 			// No words left to spell
-			_window.SetWindowScene(new Scene(new ResultsScreen(_window, _masteredWords, _words.size(), _level, _userAttempts), _window.GetWidth(), _window.GetHeight()));
+			_window.SetWindowScene(new Scene(new ResultsScreen(_window, _correctWords, _words.size(), _level, _userAttempts), _window.GetWidth(), _window.GetHeight()));
 
 			return false;
 		}
@@ -311,4 +353,122 @@ public class QuizScreen extends Parent {
 	private String currentWord() {
 		return _words.get(_wordIndex);
 	}
+
+	private void getDefinition(String word) {
+
+		try {
+			URL dictionaryAPICall = new URL("http://www.merriam-webster.com/dictionary/" + word);
+			URLConnection myURLConnection = dictionaryAPICall.openConnection();
+			myURLConnection.connect();
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(
+					myURLConnection.getInputStream()));
+			String inputLine;
+
+			boolean defFound = false;
+			int counter = 0;
+
+			String def = "";
+
+			while ((inputLine = in.readLine()) != null) {
+
+				if(inputLine.equals("    <!--Basic meta-->")) {
+					defFound = true;
+				} else if (defFound) {
+					counter++;
+				}
+
+				if(counter == 2) {
+					def = inputLine;
+					break;
+				}
+
+			}
+
+			String[] splitDef = def.split("\\s+");
+
+			String parsedDef = "";
+
+			for(int i = 5; i < splitDef.length; i++) {
+				if(splitDef[i].equals(currentWord())) {
+					break;
+				}
+				parsedDef += splitDef[i] + " ";
+			}
+			in.close();
+
+			System.out.println(word);
+
+			System.out.println(parsedDef);
+
+			if(parsedDef.isEmpty()) {
+				PopupWindow.DeployPopupWindow("Sorry!", "Definition not found!");
+			} else {
+				parsedDef = parsedDef.replaceAll("—", "");
+				PopupWindow.DeployPopupWindow("Def.", parsedDef);
+			}
+
+		} catch (MalformedURLException e) { 
+			// new URL() failed
+		} 
+		catch (IOException e) {   
+			// openConnection() failed
+		}
+
+	}
+
+	private Pane buildQuizProgress() {
+		VBox root = new VBox();
+		root.setPrefWidth(_window.GetWidth());
+		root.setPrefHeight(_window.GetHeight());
+
+		int numOfBoxes = _words.size();
+
+
+		for(int i = 0; i < numOfBoxes; i++) {
+			Canvas progressCanvas = new Canvas(BTN_HEIGHT, BTN_HEIGHT);
+
+			GraphicsContext progressDrawer = progressCanvas.getGraphicsContext2D();
+			progressDrawer.setFill(Color.WHITE);
+			progressDrawer.setStroke(Color.BLACK);
+			progressDrawer.setLineWidth(5);
+
+			progressDrawer.fillRoundRect(110, 60, 30, 30, 10, 10);
+
+			root.getChildren().add(progressCanvas);
+		}
+
+
+		return root;
+	}
 }
+
+
+
+
+//URL dictionaryAPICall = new URL("http://www.dictionaryapi.com/api/v1/references/sd3/xml/" + word + "?key=a5740089-5a68-4cf5-aa46-da6451ee63d5");
+//URLConnection myURLConnection = dictionaryAPICall.openConnection();
+//myURLConnection.connect();
+//
+//System.out.println("Word is: " + word);
+//
+//BufferedReader in = new BufferedReader(new InputStreamReader(
+//		myURLConnection.getInputStream()));
+//String inputLine;
+//
+//String xmlDocument = "";
+//
+//while ((inputLine = in.readLine()) != null) {
+//	System.out.println(inputLine);
+//	boolean closingBracketFound = false;
+//
+//	for(int i = 0; i < inputLine.length(); i++) {
+//		char letter = inputLine.charAt(i);
+//		if(letter == '(') {
+//			closingBracketFound = false;
+//		} else if (letter == ')') {
+//			closingBracketFound = true;
+//		} else if(closingBracketFound) {
+//			xmlDocument += letter;
+//		}
+//	}

@@ -249,13 +249,14 @@ public class MainScreen extends Parent {
 
 		//Making the HBox to store everything for the words tested daily goals
 		HBox wordsTestedHB = new HBox();
-
+		
 		//Making progress bar for tested words
 		ProgressBar wordsTestedPB = new ProgressBar();
 		wordsTestedPB.setStyle("-fx-accent: " + BTN_COLOR + ";");
 		wordsTestedPB.setProgress(_testedWords/_dailyGoalTestedWords);
 		wordsTestedPB.setPrefWidth(desiredWidth - 80);
-
+		wordsTestedPB.setTooltip(new Tooltip((int)_testedWords + "/" + (int)_dailyGoalTestedWords + " words tested today"));
+		
 		//Making the text for the words tested
 		Text wordsTestedTxt = new Text(WordsTextedTXT);
 		wordsTestedTxt.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
@@ -272,12 +273,14 @@ public class MainScreen extends Parent {
 		wordsMasteredPB.setStyle("-fx-accent: " + BTN_COLOR + ";");
 		wordsMasteredPB.setProgress(_masteredWords/_dailyGoalMasteredWords);
 		wordsMasteredPB.setPrefWidth(desiredWidth - 80);
+		wordsMasteredPB.setTooltip(new Tooltip((int)_masteredWords + "/" + (int)_dailyGoalMasteredWords + " words mastered today"));
+
 
 		//Making the text for the words mastered today
 		Text masteredWordsTXT = new Text(MasteredWordsTXT);
 		masteredWordsTXT.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
-
+		
 		wordsMasteredHB.getChildren().addAll(masteredWordsTXT, wordsMasteredPB);
 
 		//Making the HBox to store everything for the quizzes done daily goals
@@ -288,7 +291,8 @@ public class MainScreen extends Parent {
 		quizzesDonePB.setStyle("-fx-accent: " + BTN_COLOR + ";");
 		quizzesDonePB.setProgress(_quizzesDone/_dailyGoalQuizzes);
 		quizzesDonePB.setPrefWidth(desiredWidth - 80);
-
+		quizzesDonePB.setTooltip(new Tooltip((int)_quizzesDone + "/" + (int)_dailyGoalQuizzes + " quizzes completed today"));
+		
 		//Making the text for the quizzes done today
 		Text quizesDoneTXT = new Text(QuizzesDoneTXT);
 		quizesDoneTXT.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
@@ -434,7 +438,7 @@ public class MainScreen extends Parent {
 		btnClear.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				PopupWindow.DeployPopupWindow("Cleared Statistics");
+				PopupWindow.DeployPopupWindow("", "Cleared Statistics");
 				WordList.GetWordList().ClearStats();
 			}	
 		});

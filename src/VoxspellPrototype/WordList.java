@@ -295,7 +295,7 @@ public class WordList extends ArrayList<Level> {
 						loadLevel(wordlistToLoad);
 						_addedWordLists.add(path);
 					} else {
-						PopupWindow.DeployPopupWindow("The file loaded from " + path + " does not exist!");
+						PopupWindow.DeployPopupWindow("Warning", "The file loaded from " + path + " does not exist!");
 					}
 				}
 				pathsReader.close();
