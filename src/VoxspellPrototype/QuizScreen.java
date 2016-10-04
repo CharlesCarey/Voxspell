@@ -422,11 +422,16 @@ public class QuizScreen extends Parent {
 			System.out.println(word);
 
 			System.out.println(parsedDef);
+			
+			parsedDef = parsedDef.replaceAll("—", "");
+			parsedDef = parsedDef.replaceAll(">", "");
+			parsedDef = parsedDef.replaceAll("\"", "");
+			parsedDef = parsedDef.replaceAll("&", "");
+
 
 			if(parsedDef.isEmpty()) {
 				PopupWindow.DeployPopupWindow("Sorry!", "Definition not found!");
 			} else {
-				parsedDef = parsedDef.replaceAll("—", "");
 				PopupWindow.DeployPopupWindow("Def.", parsedDef);
 			}
 
