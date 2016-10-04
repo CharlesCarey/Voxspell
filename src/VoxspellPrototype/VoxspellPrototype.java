@@ -12,7 +12,7 @@ public class VoxspellPrototype extends Application {
 	// Global constants (naughty public static!!)
 	public static final String LIGHT_BLUE = "#A7DBDB";
 	public static final String DARK_BLUE = "#FFD464";
-	public static final String WHITE = "#e3e3e3";
+	public static final String WHITE = "#F5F5F5";
 	public static final String DARK = "#c9c9c9";
 	public static final String MEDIA_SOURCE = "/home/nathan/workspace/ccar-nkea_se206-a03/media/bunny.mp4";
 	public static final int BTN_FONT_SIZE = 22;
