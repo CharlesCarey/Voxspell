@@ -438,8 +438,46 @@ public class MainScreen extends Parent {
 		btnClear.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				PopupWindow.DeployPopupWindow("", "Cleared Statistics");
-				WordList.GetWordList().ClearStats();
+				
+				final Stage confirmationStage = new Stage();
+				
+				VBox confirmationVB = new VBox();
+				
+				Text confirmationText = new Text("Are you sure you want to clear your statistics?");
+				
+				HBox buttonHB = new HBox();
+				
+				Button confirmBtn = new Button("Confirm");
+				confirmBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						PopupWindow.DeployPopupWindow("", "Cleared Statistics");
+						WordList.GetWordList().ClearStats();						
+					}
+					
+				});
+				
+				Button cancelBtn = new Button("Cancel");
+				cancelBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						confirmationStage.close();
+					}
+					
+				});
+				
+				buttonHB.getChildren().addAll(cancelBtn, confirmBtn);
+				
+				confirmationVB.getChildren().addAll(confirmationText, buttonHB);
+				
+				Scene confirmScene = new Scene(confirmationVB, 400, 100);
+				confirmationStage.setScene(confirmScene);
+				confirmationStage.show();
+				confirmationStage.requestFocus();
+				confirmationStage.toFront();
+
 			}	
 		});
 
