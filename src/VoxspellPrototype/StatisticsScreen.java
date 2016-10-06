@@ -17,6 +17,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -40,8 +41,14 @@ public class StatisticsScreen extends Parent {
 	public StatisticsScreen(Window window) {
 		
 		this._window = window;
-		
+				
 		VBox root = new VBox();
+		
+		//Putting the stats pane into a scroll pane
+		ScrollPane statsSP = new ScrollPane();
+		statsSP.setMinHeight(_window.GetHeight());
+		statsSP.setMinWidth(_window.GetWidth());
+		statsSP.setContent(root);
 		
 		//Getting the WordList
 		WordList wordlist = WordList.GetWordList();
@@ -74,8 +81,8 @@ public class StatisticsScreen extends Parent {
 			populateStatsTable(wordlist.get(i), t);
 		}
 
-		statsTabPane.setMinHeight(_window.GetHeight());
-		statsTabPane.setMinWidth(_window.GetWidth());
+		statsTabPane.setPrefHeight(_window.GetHeight());
+		statsTabPane.setPrefWidth(_window.GetWidth());
 		
 		Button btnReturn;
 		btnReturn = new Button(BTN_RETURN_TEXT);
@@ -95,7 +102,7 @@ public class StatisticsScreen extends Parent {
 		root.getChildren().addAll(btnReturn, statsTabPane);
 		
 		//Adding the statspane
-		this.getChildren().add(root);
+		this.getChildren().add(statsSP);
 		
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 

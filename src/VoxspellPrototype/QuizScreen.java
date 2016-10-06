@@ -12,6 +12,7 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.List;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -63,7 +64,7 @@ public class QuizScreen extends Parent {
 	private final Text _txtProgress;
 	private TextField _tfdAttempt;
 	private String _level;
-	private Label _Counter = new Label();
+	private Text _Counter = new Text();
 
 	private List<String> _words;
 	private int _wordIndex = 0;
@@ -89,13 +90,13 @@ public class QuizScreen extends Parent {
 
 		// Create root pane and set its size to whole window
 		VBox root = new VBox(VBX_SPACING);
-		root.setPrefWidth(_window.GetWidth());
-		root.setPrefHeight(_window.GetHeight());
+		root.setMaxWidth(_window.GetWidth());
+		root.setMaxHeight(_window.GetHeight());
 		root.setPadding(new Insets(TOP_BOTTOM_PADDING, SIDE_PADDING, TOP_BOTTOM_PADDING, SIDE_PADDING));
 
 
 		// Create quiz title text
-		_txtQuiz = new Text("Quiz\n");
+		_txtQuiz = new Text("Quiz");
 		_txtQuiz.prefWidth(_window.GetWidth());
 		_txtQuiz.setTextAlignment(TextAlignment.CENTER);
 		_txtQuiz.setWrappingWidth(_window.GetWidth());
@@ -111,14 +112,16 @@ public class QuizScreen extends Parent {
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 		//Create count down timer
-		_Counter.setText("30");
+		_Counter = new Text("30");
 		_Counter.prefWidth(_window.GetWidth());
 		_Counter.setTextAlignment(TextAlignment.CENTER);
+		_Counter.setWrappingWidth(_window.GetWidth());
 		_Counter.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
+
 		// Add all nodes to root pane
-		root.getChildren().addAll(_txtQuiz, buildCenterGUIQuizPane(BTN_HEIGHT), _txtProgress);
+		root.getChildren().addAll(_txtQuiz, _Counter, buildCenterGUIQuizPane(BTN_HEIGHT), _txtProgress);
 
 		// Add root pane to parent
 		this.getChildren().addAll(root);
@@ -228,7 +231,7 @@ public class QuizScreen extends Parent {
 	 */
 	private void printTimer() {
 		//Set up timer
-		_time = 30;
+		_time = 31;
 		final Timeline countDownTimer = new Timeline();
 		KeyFrame keyframe = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
 
@@ -236,11 +239,16 @@ public class QuizScreen extends Parent {
 			public void handle(ActionEvent arg0) {
 				_time = _time - 1; 
 				if(_time >= 0) {
-					_Counter.setText("" + _time);	
+					_Counter.setText("" + _time);
 				} else {
-					_time = 30;
+					_time = 31;
 					_Counter.setText("" + _time);	
-					attemptWord(_tfdAttempt.getText());
+
+					if(_tfdAttempt.getText().isEmpty()) {
+						attemptWord("ranxoutxofxtime");
+					} else {
+						attemptWord(_tfdAttempt.getText());
+					}
 				}
 			}
 
@@ -293,13 +301,19 @@ public class QuizScreen extends Parent {
 			if (correct) {
 				// Correct on first guess
 				_correctWords++;
+				SoundPlayer.userWasCorrect(true);
+				new SoundPlayer().run();
 				speechOutput = speechOutput + "Correct..";
 				WordList.GetWordList().masteredWord(currentWord(), _level);
 				MainScreen.addToMasteredWordsProgress();
 				advance = true;
+				_time = 31;
 				_userAttempts.put(currentWord(), word);
 			} else {
 				// Incorrect on first guess
+				_time = 31;
+				SoundPlayer.userWasCorrect(false);
+				new SoundPlayer().run();
 				speechOutput = speechOutput + "Incorrect.. try again.. " + currentWord() + ".. " + currentWord() + ".";
 				_firstGuess = false;
 			}
@@ -307,16 +321,24 @@ public class QuizScreen extends Parent {
 			if (correct) {
 				// Correct on second guess
 				_correctWords++;
+				_time = 31;
 				speechOutput = speechOutput + "Correct..";
 				WordList.GetWordList().faultedWord(currentWord(), _level);
 				advance = true;
 				_userAttempts.put(currentWord(), word);
 			} else {
 				// Incorrect on second guess
+				_time = 31;
+				SoundPlayer.userWasCorrect(false);
+				new SoundPlayer().run();
 				speechOutput = speechOutput + "Incorrect..";
 				WordList.GetWordList().failedWord(currentWord(), _level);
 				advance = true;
-				_userAttempts.put(currentWord(), word);
+				if(word.equals("ranxoutxofxtime")) {
+					_userAttempts.put(currentWord(), " ");
+				} else {
+					_userAttempts.put(currentWord(), word);
+				}
 			}
 		}
 
@@ -400,11 +422,16 @@ public class QuizScreen extends Parent {
 			System.out.println(word);
 
 			System.out.println(parsedDef);
+			
+			parsedDef = parsedDef.replaceAll("—", "");
+			parsedDef = parsedDef.replaceAll(">", "");
+			parsedDef = parsedDef.replaceAll("\"", "");
+			parsedDef = parsedDef.replaceAll("&", "");
+
 
 			if(parsedDef.isEmpty()) {
 				PopupWindow.DeployPopupWindow("Sorry!", "Definition not found!");
 			} else {
-				parsedDef = parsedDef.replaceAll("—", "");
 				PopupWindow.DeployPopupWindow("Def.", parsedDef);
 			}
 
@@ -417,30 +444,7 @@ public class QuizScreen extends Parent {
 
 	}
 
-	private Pane buildQuizProgress() {
-		VBox root = new VBox();
-		root.setPrefWidth(_window.GetWidth());
-		root.setPrefHeight(_window.GetHeight());
 
-		int numOfBoxes = _words.size();
-
-
-		for(int i = 0; i < numOfBoxes; i++) {
-			Canvas progressCanvas = new Canvas(BTN_HEIGHT, BTN_HEIGHT);
-
-			GraphicsContext progressDrawer = progressCanvas.getGraphicsContext2D();
-			progressDrawer.setFill(Color.WHITE);
-			progressDrawer.setStroke(Color.BLACK);
-			progressDrawer.setLineWidth(5);
-
-			progressDrawer.fillRoundRect(110, 60, 30, 30, 10, 10);
-
-			root.getChildren().add(progressCanvas);
-		}
-
-
-		return root;
-	}
 }
 
 

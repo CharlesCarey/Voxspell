@@ -43,7 +43,17 @@ public class ResultsScreen extends Parent {
 
 		//Updating the users daily goals to show that they have done a quiz
 		MainScreen.addToQuizzesDone();
-
+		
+		//Seeing if the user went well enought to get a cheer
+		double userScore = (double)correctWords/wordListLength;
+		System.out.println(userScore);
+		
+		if(userScore >= 0.8) {
+			SoundPlayer.userDidGreat(true);
+			new SoundPlayer().run();
+			SoundPlayer.userDidGreat(false);
+		}
+		
 		// Create root pane and set its size to whole window
 		VBox root = new VBox(VBX_SPACING);
 		root.setPrefWidth(_window.GetWidth());
