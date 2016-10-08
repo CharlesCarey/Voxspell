@@ -134,7 +134,7 @@ public class ResultsScreen extends Parent {
 		this.getChildren().addAll(root);		
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 
-		if (correctWords < VoxspellPrototype.QUIZ_LENGTH - 1) {
+		if (correctWords < wordListLength - 1) {
 			// Dont unlock reward or next level.
 			btnReward.setDisable(true);	
 		} else {
