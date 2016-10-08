@@ -69,6 +69,7 @@ public class QuizScreen extends Parent {
 	private TextField _tfdAttempt;
 	private String _level;
 	private Text _Counter = new Text();
+	final Timeline _countDownTimer = new Timeline();
 
 	private List<String> _words;
 	private int _wordIndex = 0;
@@ -289,8 +290,6 @@ public class QuizScreen extends Parent {
 		//Set up timer
 		_time = 31;
 		
-		//Creating timeline for timer
-		final Timeline countDownTimer = new Timeline();
 		KeyFrame keyframe = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
 
 			@Override
@@ -315,9 +314,9 @@ public class QuizScreen extends Parent {
 			}
 
 		});
-		countDownTimer.setCycleCount(Timeline.INDEFINITE);
-		countDownTimer.getKeyFrames().add(keyframe);
-		countDownTimer.play();
+		_countDownTimer.setCycleCount(Timeline.INDEFINITE);
+		_countDownTimer.getKeyFrames().add(keyframe);
+		_countDownTimer.play();
 
 	}
 
@@ -463,6 +462,11 @@ public class QuizScreen extends Parent {
 			return true;
 		} else {
 			// No words left to spell
+			
+			//Stop timer
+			_countDownTimer.stop();
+			
+			//Open the results screen
 			_window.SetWindowScene(new Scene(new ResultsScreen(_window, _correctWords, _words.size(), _level, _userAttempts), _window.GetWidth(), _window.GetHeight()));
 
 			return false;

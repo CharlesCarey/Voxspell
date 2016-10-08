@@ -497,7 +497,7 @@ public class MainScreen extends Parent {
 				
 				confirmationVB.getChildren().addAll(confirmationText, buttonHB);
 				
-				Scene confirmScene = new Scene(confirmationVB, 500, 125);
+				Scene confirmScene = new Scene(confirmationVB, 550, 137);
 				confirmationStage.setScene(confirmScene);
 				confirmationStage.setResizable(false);
 				confirmationStage.show();
