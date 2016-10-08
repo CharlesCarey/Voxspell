@@ -140,7 +140,7 @@ public class ResultsScreen extends Parent {
 		} else {
 			// Unlock reward and next level.
 
-			boolean levelAboveLocked = false;
+//			boolean levelAboveLocked = false;
 			WordList wordList = WordList.GetWordList();
 
 			int index = 0;
@@ -152,21 +152,29 @@ public class ResultsScreen extends Parent {
 				}
 			}
 
-			if (listName == WordList.GetWordList().HighestUnlockedLevel().levelName()) {
-				String level = "";
-
-				// Deploy popup to inform user of new quiz level.
-				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
-					if (level != null && !level.equals(""))
-						PopupWindow.DeployPopupWindow("Congratulations!", level + " unlocked!");
-				}
-			} else if ((index + 1) <= (wordList.size() - 1)){
-				if(!wordList.get(index + 1).isUnlocked()) {
-					String level = wordList.get(index + 1).levelName();
-					wordList.get(index + 1).unlockLevel();
-					PopupWindow.DeployPopupWindow("Congratulations!", level + " unlocked!");
+			if ((index + 1) <= (wordList.size() - 1)) {
+				Level levelToUnlock = WordList.GetWordList().get(index + 1);
+				if(!levelToUnlock.isUnlocked()) {
+					levelToUnlock.unlockLevel();
+					PopupWindow.DeployPopupWindow("Congratulations!", levelToUnlock.levelName() + " unlocked!");
 				}
 			}
+			
+//			if (listName == WordList.GetWordList().HighestUnlockedLevel().levelName()) {
+//				String level = "";
+//
+//				// Deploy popup to inform user of new quiz level.
+//				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
+//					if (level != null && !level.equals(""))
+//						PopupWindow.DeployPopupWindow("Congratulations!", level + " unlocked!");
+//				}
+//			} else if ((index + 1) <= (wordList.size() - 1)){
+//				if(!wordList.get(index + 1).isUnlocked()) {
+//					String level = wordList.get(index + 1).levelName();
+//					wordList.get(index + 1).unlockLevel();
+//					PopupWindow.DeployPopupWindow("Congratulations!", level + " unlocked!");
+//				}
+//			}
 		}	
 
 	}

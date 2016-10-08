@@ -550,9 +550,11 @@ public class QuizScreen extends Parent {
 
 		} catch (MalformedURLException e) { 
 			// new URL() failed
+			PopupWindow.DeployPopupWindow("Sorry!", "Definition not found!");
 		} 
 		catch (IOException e) {   
 			// openConnection() failed
+			PopupWindow.DeployPopupWindow("Sorry!", "Definition not found!");
 		}
 
 	}
