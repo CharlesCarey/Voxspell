@@ -46,7 +46,6 @@ public class ResultsScreen extends Parent {
 		
 		//Seeing if the user went well enought to get a cheer
 		double userScore = (double)correctWords/wordListLength;
-		System.out.println(userScore);
 		
 		if(userScore >= 0.8) {
 			SoundPlayer.userDidGreat(true);

@@ -156,6 +156,11 @@ public class MainScreen extends Parent {
 		root.setStyle("-fx-background-color: " + "#A7DBDB" + ";");
 	}
 
+	/**
+	 * This method builds the part of the main screen where the daily goals are shown
+	 * @param desiredWidth
+	 * @return
+	 */
 	private Pane buildDailyGoals(double desiredWidth) {
 
 		//Loading in the daily goals
@@ -306,6 +311,11 @@ public class MainScreen extends Parent {
 		return dailyGoalsVBox;
 	}
 
+	/**
+	 * This method builds the part of the main screen which shows all the buttons
+	 * @param desiredWidth
+	 * @return
+	 */
 	private Pane buildMenuBar(double desiredWidth) {
 		Button btnNew, btnReview, btnStats, btnClear, btnQuit, btnOptions;
 
@@ -441,17 +451,29 @@ public class MainScreen extends Parent {
 				
 				final Stage confirmationStage = new Stage();
 				
-				VBox confirmationVB = new VBox();
+				VBox confirmationVB = new VBox(10);
+				confirmationVB.setAlignment(Pos.CENTER);
+				confirmationVB.setPrefHeight(confirmationStage.getHeight());
+				confirmationVB.setPrefWidth(confirmationStage.getWidth());
+				confirmationVB.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 				
 				Text confirmationText = new Text("Are you sure you want to clear your statistics?");
+				confirmationText.setTextAlignment(TextAlignment.CENTER);
+				confirmationText.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
+						" -fx-fill: " + TXT_FONT_COLOR + ";");
 				
-				HBox buttonHB = new HBox();
+				HBox buttonHB = new HBox(BUTTON_SEPERATION);
+				buttonHB.setAlignment(Pos.CENTER);
 				
 				Button confirmBtn = new Button("Confirm");
+				confirmBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+						" -fx-base: " + BTN_COLOR + ";" + 
+						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 				confirmBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 					@Override
 					public void handle(ActionEvent arg0) {
+						confirmationStage.close();
 						PopupWindow.DeployPopupWindow("", "Cleared Statistics");
 						WordList.GetWordList().ClearStats();						
 					}
@@ -459,6 +481,9 @@ public class MainScreen extends Parent {
 				});
 				
 				Button cancelBtn = new Button("Cancel");
+				cancelBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+						" -fx-base: " + BTN_COLOR + ";" + 
+						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 				cancelBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 					@Override
@@ -472,8 +497,9 @@ public class MainScreen extends Parent {
 				
 				confirmationVB.getChildren().addAll(confirmationText, buttonHB);
 				
-				Scene confirmScene = new Scene(confirmationVB, 400, 100);
+				Scene confirmScene = new Scene(confirmationVB, 500, 125);
 				confirmationStage.setScene(confirmScene);
+				confirmationStage.setResizable(false);
 				confirmationStage.show();
 				confirmationStage.requestFocus();
 				confirmationStage.toFront();
@@ -500,18 +526,33 @@ public class MainScreen extends Parent {
 		return menuButtons;
 	}
 
+	/**
+	 * This adds to the daily goals of words tested
+	 * 
+	 * @param numOfWordsTested
+	 */
 	public static void addToTestedWordsProgress(int numOfWordsTested) {
 		_testedWords += numOfWordsTested;
 	}
 
+	/**
+	 * This method adds one to the mastered words daily goal
+	 */
 	public static void addToMasteredWordsProgress() {
 		_masteredWords += 1;
 	}
 	
+	/**
+	 * This method adds one to the quizzes done daily goal
+	 */
 	public static void addToQuizzesDone() {
 		_quizzesDone += 1;
 	}
 	
+	/**
+	 * This method returns an array of all the daily goals
+	 * @return
+	 */
 	public static double[] getDailyGoals() {
 		double[] dailyGoals = {_testedWords, _masteredWords, _quizzesDone};
 		return dailyGoals;

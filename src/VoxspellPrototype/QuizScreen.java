@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,6 +28,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -60,6 +63,7 @@ public class QuizScreen extends Parent {
 	private final int BTN_HEIGHT = 70;
 	private final int TFD_WIDTH = 300;
 
+	private final List<ImageView> _quizProgress = new ArrayList<ImageView>();
 	private final Text _txtQuiz;
 	private final Text _txtProgress;
 	private TextField _tfdAttempt;
@@ -73,8 +77,25 @@ public class QuizScreen extends Parent {
 	private int _correctWords = 0;
 	private HashMap<String, String> _userAttempts = new HashMap<String, String>();
 
+	private Image GreenCircle;
+	private Image OrangeCircle;
+	private Image RedCircle;
+
+
 
 	public QuizScreen(Window window, String wordlistName, LevelSelectionScreen.QuizType quizType) {
+
+		//Setting up the circle images
+		File greenCircleFile = new File("./images/green-circle.png");
+		GreenCircle = new Image(greenCircleFile.toURI().toString());
+
+		File orangeCircleFile = new File("./images/orange-circle.png");
+		OrangeCircle = new Image(orangeCircleFile.toURI().toString());
+
+		File redCircleFile = new File("./images/red-circle.png");
+		RedCircle = new Image(redCircleFile.toURI().toString());
+
+
 		this._window = window;
 
 		_level = wordlistName;
@@ -133,6 +154,12 @@ public class QuizScreen extends Parent {
 	}
 
 
+	/**
+	 * This builds the central area of the quiz pane
+	 * 
+	 * @param desiredHeight
+	 * @return
+	 */
 	private Pane buildCenterGUIQuizPane(double desiredHeight) {
 
 		VBox root = new VBox(HBX_SPACING);
@@ -218,7 +245,36 @@ public class QuizScreen extends Parent {
 		});
 
 		defBox.getChildren().add(btnDefinition);
-		root.getChildren().addAll(centerPane, defBox);
+
+		//Creating the HBox to hold all the images which indicate the users progress
+		HBox quizProgressHB = new HBox(HBX_SPACING * 4);
+		quizProgressHB.setAlignment(Pos.CENTER);
+		quizProgressHB.setMaxWidth(_window.GetWidth());
+		quizProgressHB.setPadding(new Insets(30, 0, 0, 0));
+
+		int numOfCircles = _words.size();
+
+		File greyCircleFile = new File("./images/grey-circle.png");
+
+		Image greyCircle = new Image(greyCircleFile.toURI().toString());
+
+		int size = _window.GetWidth()/(numOfCircles + HBX_SPACING * 2);
+
+		
+		//Adding each circle to the HBox and an array list
+		for(int i = 0; i < numOfCircles; i++) {
+			ImageView circle = new ImageView();
+			circle.setImage(greyCircle);
+			circle.setFitHeight(size);
+			circle.setFitWidth(size);
+			circle.setPreserveRatio(true);
+
+			_quizProgress.add(circle);
+
+			quizProgressHB.getChildren().add(circle);
+		}
+
+		root.getChildren().addAll(centerPane, defBox, quizProgressHB);
 
 		printTimer();
 
@@ -232,14 +288,20 @@ public class QuizScreen extends Parent {
 	private void printTimer() {
 		//Set up timer
 		_time = 31;
+		
+		//Creating timeline for timer
 		final Timeline countDownTimer = new Timeline();
 		KeyFrame keyframe = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				_time = _time - 1; 
+				_time = _time - 1;
+				
+				//If timer is bigger than 0, then display the timer
 				if(_time >= 0) {
 					_Counter.setText("" + _time);
+					
+				//Else, reset the timer and enter the users currently typed word
 				} else {
 					_time = 31;
 					_Counter.setText("" + _time);	
@@ -266,7 +328,7 @@ public class QuizScreen extends Parent {
 	 */
 	private boolean attemptWord(String word) {
 
-		_txtQuiz.setText("Quiz\n\n");
+		_txtQuiz.setText("Quiz");
 
 		word = word.trim();
 
@@ -301,19 +363,35 @@ public class QuizScreen extends Parent {
 			if (correct) {
 				// Correct on first guess
 				_correctWords++;
+
+				_quizProgress.get(_wordIndex).setImage(GreenCircle);
+
+				//PLaying the correct sound
 				SoundPlayer.userWasCorrect(true);
 				new SoundPlayer().run();
+
+				//Saying the user got the word correct
 				speechOutput = speechOutput + "Correct..";
 				WordList.GetWordList().masteredWord(currentWord(), _level);
+
+				//Adding it to the mastered progress
 				MainScreen.addToMasteredWordsProgress();
 				advance = true;
+
+				//Setting the timer again
 				_time = 31;
 				_userAttempts.put(currentWord(), word);
 			} else {
 				// Incorrect on first guess
+				
+				//Resetting timer
 				_time = 31;
+				
+				//Playing the incorrect tone
 				SoundPlayer.userWasCorrect(false);
 				new SoundPlayer().run();
+				
+				//Saying the word was incorrect, spell it again
 				speechOutput = speechOutput + "Incorrect.. try again.. " + currentWord() + ".. " + currentWord() + ".";
 				_firstGuess = false;
 			}
@@ -321,17 +399,36 @@ public class QuizScreen extends Parent {
 			if (correct) {
 				// Correct on second guess
 				_correctWords++;
+				
+				//Resetting timer
 				_time = 31;
+				
+				//Saying user got it right
 				speechOutput = speechOutput + "Correct..";
+				
+				//Setting the quiz progress to be orange to indicate the user faulted
+				_quizProgress.get(_wordIndex).setImage(OrangeCircle);
+				
+				//Adding it to faulted word
 				WordList.GetWordList().faultedWord(currentWord(), _level);
 				advance = true;
 				_userAttempts.put(currentWord(), word);
 			} else {
 				// Incorrect on second guess
+				
+				//Resetting the timer
 				_time = 31;
+				
+				//Playing the incorrect attempt noise
 				SoundPlayer.userWasCorrect(false);
 				new SoundPlayer().run();
+				
+				//Saying the word was incorrect
 				speechOutput = speechOutput + "Incorrect..";
+				
+				//Setting the quiz progress to be red
+				_quizProgress.get(_wordIndex).setImage(RedCircle);
+				
 				WordList.GetWordList().failedWord(currentWord(), _level);
 				advance = true;
 				if(word.equals("ranxoutxofxtime")) {
@@ -372,13 +469,23 @@ public class QuizScreen extends Parent {
 		}
 	}
 
+	/**
+	 * Returns the current word
+	 * @return
+	 */
 	private String currentWord() {
 		return _words.get(_wordIndex);
 	}
 
+	/**
+	 * This method attempts to find the defintion for a word
+	 * @param word
+	 */
 	private void getDefinition(String word) {
 
 		try {
+			
+			//Opening a connection to merriam websters result page for the word specified
 			URL dictionaryAPICall = new URL("http://www.merriam-webster.com/dictionary/" + word);
 			URLConnection myURLConnection = dictionaryAPICall.openConnection();
 			myURLConnection.connect();
@@ -392,8 +499,10 @@ public class QuizScreen extends Parent {
 
 			String def = "";
 
+			//Reading through the HTML code from the website
 			while ((inputLine = in.readLine()) != null) {
 
+				//If basic meta is found then the definition is three lines away
 				if(inputLine.equals("    <!--Basic meta-->")) {
 					defFound = true;
 				} else if (defFound) {
@@ -407,10 +516,12 @@ public class QuizScreen extends Parent {
 
 			}
 
+			//Split string by spaces
 			String[] splitDef = def.split("\\s+");
 
 			String parsedDef = "";
 
+			//The definition always starts 5 words in 
 			for(int i = 5; i < splitDef.length; i++) {
 				if(splitDef[i].equals(currentWord())) {
 					break;
@@ -419,16 +530,14 @@ public class QuizScreen extends Parent {
 			}
 			in.close();
 
-			System.out.println(word);
-
-			System.out.println(parsedDef);
-			
+			//Remove all symbols
 			parsedDef = parsedDef.replaceAll("—", "");
 			parsedDef = parsedDef.replaceAll(">", "");
 			parsedDef = parsedDef.replaceAll("\"", "");
 			parsedDef = parsedDef.replaceAll("&", "");
 
 
+			//Displaying the def or saying no def could be found
 			if(parsedDef.isEmpty()) {
 				PopupWindow.DeployPopupWindow("Sorry!", "Definition not found!");
 			} else {
@@ -446,33 +555,3 @@ public class QuizScreen extends Parent {
 
 
 }
-
-
-
-
-//URL dictionaryAPICall = new URL("http://www.dictionaryapi.com/api/v1/references/sd3/xml/" + word + "?key=a5740089-5a68-4cf5-aa46-da6451ee63d5");
-//URLConnection myURLConnection = dictionaryAPICall.openConnection();
-//myURLConnection.connect();
-//
-//System.out.println("Word is: " + word);
-//
-//BufferedReader in = new BufferedReader(new InputStreamReader(
-//		myURLConnection.getInputStream()));
-//String inputLine;
-//
-//String xmlDocument = "";
-//
-//while ((inputLine = in.readLine()) != null) {
-//	System.out.println(inputLine);
-//	boolean closingBracketFound = false;
-//
-//	for(int i = 0; i < inputLine.length(); i++) {
-//		char letter = inputLine.charAt(i);
-//		if(letter == '(') {
-//			closingBracketFound = false;
-//		} else if (letter == ')') {
-//			closingBracketFound = true;
-//		} else if(closingBracketFound) {
-//			xmlDocument += letter;
-//		}
-//	}

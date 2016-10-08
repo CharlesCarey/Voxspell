@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 public class HelpScreen {
 
 	public HelpScreen(String helpFileName) {
+		
+		//Creating the stage to show the help text files
 		Stage popUpHelpStage = new Stage();
 		
 		TextArea helpTA = new TextArea();
@@ -21,10 +23,12 @@ public class HelpScreen {
 		File helpFile = new File(helpFileName);
 		
 		try {
+			//Creating a reader to read all the lines in the help files
 			BufferedReader helpReader = new BufferedReader(new FileReader(helpFile));
 			
 			String line = "";
 			
+			//While there are still lines to be read in the help file, they are appended to the text area
 			while((line = helpReader.readLine()) != null) {
 				helpTA.appendText(line + "\n");
 			}

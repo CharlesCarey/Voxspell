@@ -28,11 +28,19 @@ public class WordListLoader extends Parent{
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
 	private final String TXT_FONT_COLOR = VoxspellPrototype.WHITE;
 
+	/**
+	 * This method allows the user to choose a word list to be loaded into the system 
+	 */
 	public WordListLoader() {
+		//Creating a file chooser and getting the file the user chooses
 		FileChooser fileChooser = new FileChooser();
 		int levelStart = WordList.GetWordList().size();
 		File newWordList = fileChooser.showOpenDialog(new Stage());
+		
+		//Checking if the file is the correct type
 		boolean isOKToLoad = fileTypeChecker(newWordList);
+		
+		//If the file type is ok then load it, else show the user that the file was invalid
 		if(isOKToLoad) {
 			WordList.loadLevel(newWordList);
 			int levelEnd = WordList.GetWordList().size();
@@ -47,6 +55,8 @@ public class WordListLoader extends Parent{
 	 * This method determines the type of file
 	 */
 	public boolean fileTypeChecker(File f) {
+		
+		//Working out the extension of the file and checking it equals .txt
 		String fileName = f.getName();
 		String extension = fileName.substring(fileName.length() - 3, fileName.length());
 		if(extension.equals("txt")) {
