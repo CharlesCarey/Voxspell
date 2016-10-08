@@ -1,6 +1,10 @@
 package VoxspellPrototype;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.spi.FileTypeDetector;
 
 import javafx.beans.value.ChangeListener;
@@ -28,18 +32,33 @@ public class WordListLoader extends Parent{
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
 	private final String TXT_FONT_COLOR = VoxspellPrototype.WHITE;
 
+	/**
+	 * This method allows the user to choose a word list to be loaded into the system 
+	 */
 	public WordListLoader() {
+		//Creating a file chooser and getting the file the user chooses
 		FileChooser fileChooser = new FileChooser();
 		int levelStart = WordList.GetWordList().size();
 		File newWordList = fileChooser.showOpenDialog(new Stage());
+
+		//Checking if the file is the correct type
 		boolean isOKToLoad = fileTypeChecker(newWordList);
-		if(isOKToLoad) {
-			WordList.loadLevel(newWordList);
-			int levelEnd = WordList.GetWordList().size();
-			WordList.GetWordList().addWordList(newWordList.getAbsolutePath());
-			ChooseLevelScreen(levelStart, levelEnd);
+
+		//Checking if the file is not empty 
+		boolean isNotEmpty = isFileEmpty(newWordList);
+		
+		//If the file type is ok then load it, else show the user that the file was invalid
+		if(isOKToLoad && isNotEmpty) {
+			try {
+				WordList.loadLevel(newWordList);
+				int levelEnd = WordList.GetWordList().size();
+				WordList.GetWordList().addWordList(newWordList.getAbsolutePath());
+				ChooseLevelScreen(levelStart, levelEnd);
+			} catch (Exception e) {
+				PopupWindow.DeployPopupWindow("Warning!", "The layout of the levels in the text files is invalid! Please try again!");
+			}
 		} else {
-			PopupWindow.DeployPopupWindow("The file type appears to be invalid. Please try again!");
+			PopupWindow.DeployPopupWindow("Warning!", "The file type appears to be invalid. Please try again!");
 		}
 	}
 
@@ -47,6 +66,8 @@ public class WordListLoader extends Parent{
 	 * This method determines the type of file
 	 */
 	public boolean fileTypeChecker(File f) {
+
+		//Working out the extension of the file and checking it equals .txt
 		String fileName = f.getName();
 		String extension = fileName.substring(fileName.length() - 3, fileName.length());
 		if(extension.equals("txt")) {
@@ -54,6 +75,51 @@ public class WordListLoader extends Parent{
 		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * This method checks the file to load has at least one level with at least one word
+	 */
+	public boolean isFileEmpty(File f) {
+		
+		boolean fileIsOK = true;
+		
+		try {
+			BufferedReader emptyChecker = new BufferedReader(new FileReader(f));
+			
+			//Creating a counter to check there are two lines and the first one starts with %
+			int count = 0;
+						
+			String line = "";
+			
+			while((line = emptyChecker.readLine()) != null) {
+				count++;
+				
+				//Checking the first line starts with w %
+				if(count == 1) {
+					if(line.charAt(0) != '%') {
+						fileIsOK = false;
+					}
+					
+				//Checking the second line does not contain a %
+				} else if (count == 2) {
+					if(line.contains("%")) {
+						fileIsOK = false;
+					}
+				}
+			}
+			
+			if(count < 2) {
+				fileIsOK = false;
+			}
+			
+			emptyChecker.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return fileIsOK;
+		
 	}
 
 	/**

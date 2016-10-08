@@ -1,0 +1,3 @@
+Options Help
+
+Pressing the ‘Options’ button will take you to the options menu. Here you can change the voice and speed to settings that you like!

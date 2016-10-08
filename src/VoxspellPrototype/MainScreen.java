@@ -14,6 +14,8 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -21,6 +23,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 
 
 public class MainScreen extends Parent {
@@ -102,6 +105,38 @@ public class MainScreen extends Parent {
 		Menu helpMenu = new Menu();
 		helpMenu.setText("Help");
 
+		MenuItem quizHelp = new MenuItem("Quiz Help");
+		quizHelp.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				new HelpScreen("Help-Files/Quiz-Help.txt");
+			}
+			
+		});
+		
+		MenuItem statsHelp = new MenuItem("Stats Help");
+		statsHelp.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				new HelpScreen("Help-Files/Stats-Help.txt");
+			}
+			
+		});
+
+		MenuItem optionsHelp = new MenuItem("Options Help");
+		optionsHelp.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				new HelpScreen("Help-Files/Options-Help.txt");
+			}
+			
+		});
+		
+		helpMenu.getItems().addAll(quizHelp, statsHelp, optionsHelp);
+		
 		menuBar.getMenus().addAll(fileMenu, helpMenu);
 
 		Pane dailyGoalsPane = buildDailyGoals(root.getPrefWidth()
@@ -121,6 +156,11 @@ public class MainScreen extends Parent {
 		root.setStyle("-fx-background-color: " + "#A7DBDB" + ";");
 	}
 
+	/**
+	 * This method builds the part of the main screen where the daily goals are shown
+	 * @param desiredWidth
+	 * @return
+	 */
 	private Pane buildDailyGoals(double desiredWidth) {
 
 		//Loading in the daily goals
@@ -214,13 +254,14 @@ public class MainScreen extends Parent {
 
 		//Making the HBox to store everything for the words tested daily goals
 		HBox wordsTestedHB = new HBox();
-
+		
 		//Making progress bar for tested words
 		ProgressBar wordsTestedPB = new ProgressBar();
 		wordsTestedPB.setStyle("-fx-accent: " + BTN_COLOR + ";");
 		wordsTestedPB.setProgress(_testedWords/_dailyGoalTestedWords);
 		wordsTestedPB.setPrefWidth(desiredWidth - 80);
-
+		wordsTestedPB.setTooltip(new Tooltip((int)_testedWords + "/" + (int)_dailyGoalTestedWords + " words tested today"));
+		
 		//Making the text for the words tested
 		Text wordsTestedTxt = new Text(WordsTextedTXT);
 		wordsTestedTxt.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
@@ -237,12 +278,14 @@ public class MainScreen extends Parent {
 		wordsMasteredPB.setStyle("-fx-accent: " + BTN_COLOR + ";");
 		wordsMasteredPB.setProgress(_masteredWords/_dailyGoalMasteredWords);
 		wordsMasteredPB.setPrefWidth(desiredWidth - 80);
+		wordsMasteredPB.setTooltip(new Tooltip((int)_masteredWords + "/" + (int)_dailyGoalMasteredWords + " words mastered today"));
+
 
 		//Making the text for the words mastered today
 		Text masteredWordsTXT = new Text(MasteredWordsTXT);
 		masteredWordsTXT.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
-
+		
 		wordsMasteredHB.getChildren().addAll(masteredWordsTXT, wordsMasteredPB);
 
 		//Making the HBox to store everything for the quizzes done daily goals
@@ -253,7 +296,8 @@ public class MainScreen extends Parent {
 		quizzesDonePB.setStyle("-fx-accent: " + BTN_COLOR + ";");
 		quizzesDonePB.setProgress(_quizzesDone/_dailyGoalQuizzes);
 		quizzesDonePB.setPrefWidth(desiredWidth - 80);
-
+		quizzesDonePB.setTooltip(new Tooltip((int)_quizzesDone + "/" + (int)_dailyGoalQuizzes + " quizzes completed today"));
+		
 		//Making the text for the quizzes done today
 		Text quizesDoneTXT = new Text(QuizzesDoneTXT);
 		quizesDoneTXT.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
@@ -267,6 +311,11 @@ public class MainScreen extends Parent {
 		return dailyGoalsVBox;
 	}
 
+	/**
+	 * This method builds the part of the main screen which shows all the buttons
+	 * @param desiredWidth
+	 * @return
+	 */
 	private Pane buildMenuBar(double desiredWidth) {
 		Button btnNew, btnReview, btnStats, btnClear, btnQuit, btnOptions;
 
@@ -328,6 +377,13 @@ public class MainScreen extends Parent {
 
 		btnOptions.setMinWidth(menuButtons.getPrefWidth()); 
 		btnOptions.setPrefHeight(Integer.MAX_VALUE);
+		
+		//Add tooltips for buttons
+		btnNew.setTooltip(new Tooltip("Click to start a new quiz!"));
+		btnReview.setTooltip(new Tooltip("Click to start a quiz to review your failed words!"));
+		btnStats.setTooltip(new Tooltip("Click to see your attempt history!"));
+		btnClear.setTooltip(new Tooltip("Click to clear the statistics!"));
+		btnOptions.setTooltip(new Tooltip("Click change the settings!"));
 
 		//Add buttons to their respective grouping
 		VBox quizButtonsVB = new VBox(BUTTON_SEPERATION);
@@ -392,8 +448,62 @@ public class MainScreen extends Parent {
 		btnClear.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				PopupWindow.DeployPopupWindow("Cleared Statistics");
-				WordList.GetWordList().ClearStats();
+				
+				final Stage confirmationStage = new Stage();
+				
+				VBox confirmationVB = new VBox(10);
+				confirmationVB.setAlignment(Pos.CENTER);
+				confirmationVB.setPrefHeight(confirmationStage.getHeight());
+				confirmationVB.setPrefWidth(confirmationStage.getWidth());
+				confirmationVB.setStyle("-fx-background-color: " + BACK_COLOR + ";");
+				
+				Text confirmationText = new Text("Are you sure you want to clear your statistics?");
+				confirmationText.setTextAlignment(TextAlignment.CENTER);
+				confirmationText.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
+						" -fx-fill: " + TXT_FONT_COLOR + ";");
+				
+				HBox buttonHB = new HBox(BUTTON_SEPERATION);
+				buttonHB.setAlignment(Pos.CENTER);
+				
+				Button confirmBtn = new Button("Confirm");
+				confirmBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+						" -fx-base: " + BTN_COLOR + ";" + 
+						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+				confirmBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						confirmationStage.close();
+						PopupWindow.DeployPopupWindow("", "Cleared Statistics");
+						WordList.GetWordList().ClearStats();						
+					}
+					
+				});
+				
+				Button cancelBtn = new Button("Cancel");
+				cancelBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+						" -fx-base: " + BTN_COLOR + ";" + 
+						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
+				cancelBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						confirmationStage.close();
+					}
+					
+				});
+				
+				buttonHB.getChildren().addAll(cancelBtn, confirmBtn);
+				
+				confirmationVB.getChildren().addAll(confirmationText, buttonHB);
+				
+				Scene confirmScene = new Scene(confirmationVB, 550, 137);
+				confirmationStage.setScene(confirmScene);
+				confirmationStage.setResizable(false);
+				confirmationStage.show();
+				confirmationStage.requestFocus();
+				confirmationStage.toFront();
+
 			}	
 		});
 
@@ -416,18 +526,33 @@ public class MainScreen extends Parent {
 		return menuButtons;
 	}
 
+	/**
+	 * This adds to the daily goals of words tested
+	 * 
+	 * @param numOfWordsTested
+	 */
 	public static void addToTestedWordsProgress(int numOfWordsTested) {
 		_testedWords += numOfWordsTested;
 	}
 
+	/**
+	 * This method adds one to the mastered words daily goal
+	 */
 	public static void addToMasteredWordsProgress() {
 		_masteredWords += 1;
 	}
 	
+	/**
+	 * This method adds one to the quizzes done daily goal
+	 */
 	public static void addToQuizzesDone() {
 		_quizzesDone += 1;
 	}
 	
+	/**
+	 * This method returns an array of all the daily goals
+	 * @return
+	 */
 	public static double[] getDailyGoals() {
 		double[] dailyGoals = {_testedWords, _masteredWords, _quizzesDone};
 		return dailyGoals;

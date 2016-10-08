@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -295,7 +294,7 @@ public class WordList extends ArrayList<Level> {
 						loadLevel(wordlistToLoad);
 						_addedWordLists.add(path);
 					} else {
-						PopupWindow.DeployPopupWindow("The file loaded from " + path + " does not exist!");
+						PopupWindow.DeployPopupWindow("Warning", "The file loaded from " + path + " does not exist!");
 					}
 				}
 				pathsReader.close();

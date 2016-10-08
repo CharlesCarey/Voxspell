@@ -30,12 +30,23 @@ public class TestedWordsScreen extends Parent {
 
 	private final HashMap<String, String> userAttempts;
 
+	/**
+	 * 
+	 * This method generates a screen where the user can see what they entered for each word and what the correct spelling is 
+	 * 
+	 * @param window
+	 * @param attempts
+	 * @param correctWords
+	 * @param wordListLength
+	 * @param listName
+	 */
 	public TestedWordsScreen(Window window, HashMap<String, String> attempts, int correctWords, int wordListLength, String listName) {
 		this._window = window;
 		this.userAttempts = attempts;
 		
 		VBox root = new VBox();
 		
+		//Creating a button to return the user to the main menu
 		Button returnToMenuBtn;
 		returnToMenuBtn = new Button("Return");
 		returnToMenuBtn.setPrefWidth(_window.GetWidth());
@@ -58,6 +69,7 @@ public class TestedWordsScreen extends Parent {
 			
 		});
 		
+		//Creating the columns for the table and setting all their cell factories
 		TableColumn<Map.Entry<String, String>, String> wordsCol = new TableColumn<Map.Entry<String, String>, String>("Tested Words");
 		TableColumn<Map.Entry<String, String>, String> attemptsCol = new TableColumn<Map.Entry<String, String>, String>("Your Answer");
 

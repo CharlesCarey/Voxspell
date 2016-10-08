@@ -88,6 +88,12 @@ public class LevelSelectionScreen extends Parent {
 			//Else if the word log doesn't exist then let the user choose what level they want to start at
 		} else if(!wordlog.exists()) {
 			ChooseLevelScreen(0, WordList.GetWordList().size());
+			
+			//Else if the first level isn't unlocked
+		} else if (WordList.GetWordList().size() > 0 && !WordList.GetWordList().get(0).isUnlocked()) {
+
+			ChooseLevelScreen(0, WordList.GetWordList().size());
+
 		} else {
 
 			//Or if the Word-Log file is there, then check if it is empty or not to decide which screen to show
@@ -272,7 +278,7 @@ public class LevelSelectionScreen extends Parent {
 					btn.setOnAction(new EventHandler<ActionEvent>() {
 						@Override
 						public void handle(ActionEvent arg0) {
-							PopupWindow.DeployPopupWindow("You need to unlock this level before you can use play it!");
+							PopupWindow.DeployPopupWindow("Quiz", "You need to unlock this level before you can use play it!");
 						}
 					});
 				}
@@ -288,7 +294,7 @@ public class LevelSelectionScreen extends Parent {
 						btn.setOnAction(new EventHandler<ActionEvent>() {
 							@Override
 							public void handle(ActionEvent arg0) {
-								PopupWindow.DeployPopupWindow("You currently have no words to review!");
+								PopupWindow.DeployPopupWindow("Review Quiz", "You currently have no words to review!");
 							}
 						});
 
@@ -311,7 +317,7 @@ public class LevelSelectionScreen extends Parent {
 					btn.setOnAction(new EventHandler<ActionEvent>() {
 						@Override
 						public void handle(ActionEvent arg0) {
-							PopupWindow.DeployPopupWindow("You need to unlock this level before you can use play it!");
+							PopupWindow.DeployPopupWindow("Quiz", "You need to unlock this level before you can use play it!");
 						}
 					});
 				}

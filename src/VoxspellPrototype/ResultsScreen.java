@@ -44,6 +44,15 @@ public class ResultsScreen extends Parent {
 		//Updating the users daily goals to show that they have done a quiz
 		MainScreen.addToQuizzesDone();
 		
+		//Seeing if the user went well enought to get a cheer
+		double userScore = (double)correctWords/wordListLength;
+		
+		if(userScore >= 0.8) {
+			SoundPlayer.userDidGreat(true);
+			new SoundPlayer().run();
+			SoundPlayer.userDidGreat(false);
+		}
+		
 		// Create root pane and set its size to whole window
 		VBox root = new VBox(VBX_SPACING);
 		root.setPrefWidth(_window.GetWidth());
@@ -89,12 +98,12 @@ public class ResultsScreen extends Parent {
 		btnTestedWords.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
-		
+
 		final int words = correctWords;
 		final int length = wordListLength;
 		final String name = listName;
 		final HashMap<String, String> attempts = userAttempts;
-		
+
 		btnTestedWords.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
@@ -125,20 +134,47 @@ public class ResultsScreen extends Parent {
 		this.getChildren().addAll(root);		
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 
-		if (correctWords < VoxspellPrototype.QUIZ_LENGTH - 1) {
+		if (correctWords < wordListLength - 1) {
 			// Dont unlock reward or next level.
 			btnReward.setDisable(true);	
 		} else {
 			// Unlock reward and next level.
-			if (listName == WordList.GetWordList().HighestUnlockedLevel().levelName()) {
-				String level = "";
 
-				// Deploy popup to inform user of new quiz level.
-				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
-					if (level != null && !level.equals(""))
-						PopupWindow.DeployPopupWindow(level + " unlocked!");
+//			boolean levelAboveLocked = false;
+			WordList wordList = WordList.GetWordList();
+
+			int index = 0;
+
+			for(int i = 0; i < wordList.size(); i++) {
+				if(wordList.get(i).levelName().equals(listName)) {
+					index = i;
+					break;
 				}
 			}
+
+			if ((index + 1) <= (wordList.size() - 1)) {
+				Level levelToUnlock = WordList.GetWordList().get(index + 1);
+				if(!levelToUnlock.isUnlocked()) {
+					levelToUnlock.unlockLevel();
+					PopupWindow.DeployPopupWindow("Congratulations!", levelToUnlock.levelName() + " unlocked!");
+				}
+			}
+			
+//			if (listName == WordList.GetWordList().HighestUnlockedLevel().levelName()) {
+//				String level = "";
+//
+//				// Deploy popup to inform user of new quiz level.
+//				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
+//					if (level != null && !level.equals(""))
+//						PopupWindow.DeployPopupWindow("Congratulations!", level + " unlocked!");
+//				}
+//			} else if ((index + 1) <= (wordList.size() - 1)){
+//				if(!wordList.get(index + 1).isUnlocked()) {
+//					String level = wordList.get(index + 1).levelName();
+//					wordList.get(index + 1).unlockLevel();
+//					PopupWindow.DeployPopupWindow("Congratulations!", level + " unlocked!");
+//				}
+//			}
 		}	
 
 	}
