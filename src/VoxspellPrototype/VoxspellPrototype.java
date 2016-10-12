@@ -1,5 +1,8 @@
 package VoxspellPrototype;
 
+import VoxspellScreens.MainScreen;
+import VoxspellScreens.Window;
+import WordList.WordList;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;

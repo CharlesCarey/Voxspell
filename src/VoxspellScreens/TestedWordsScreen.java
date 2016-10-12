@@ -1,8 +1,9 @@
-package VoxspellPrototype;
+package VoxspellScreens;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import VoxspellPrototype.VoxspellPrototype;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;

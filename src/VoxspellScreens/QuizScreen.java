@@ -1,4 +1,4 @@
-package VoxspellPrototype;
+package VoxspellScreens;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -13,6 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import Sound.FestivalSpeakTask;
+import Sound.SoundPlayer;
+import VoxspellPrototype.VoxspellPrototype;
+import WordList.WordList;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -550,11 +554,11 @@ public class QuizScreen extends Parent {
 
 		} catch (MalformedURLException e) { 
 			// new URL() failed
-			PopupWindow.DeployPopupWindow("Sorry!", "Definition not found!");
+			PopupWindow.DeployPopupWindow("No Internet Connection!", "Please connect to internet and try again!");
 		} 
 		catch (IOException e) {   
 			// openConnection() failed
-			PopupWindow.DeployPopupWindow("Sorry!", "Definition not found!");
+			PopupWindow.DeployPopupWindow("No Internet Connection!", "Please connect to internet and try again!");
 		}
 
 	}

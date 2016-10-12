@@ -1,7 +1,10 @@
-package VoxspellPrototype;
+package VoxspellScreens;
 
 import java.io.File;
 
+import VoxspellPrototype.VoxspellPrototype;
+import WordList.WordList;
+import WordList.WordListLoader;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -135,7 +138,17 @@ public class MainScreen extends Parent {
 			
 		});
 		
-		helpMenu.getItems().addAll(quizHelp, statsHelp, optionsHelp);
+		MenuItem loadFilesHelp = new MenuItem("File Help");
+		loadFilesHelp.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				new HelpScreen("Help-Files/File-Help.txt");
+			}
+			
+		});
+		
+		helpMenu.getItems().addAll(quizHelp, statsHelp, optionsHelp, loadFilesHelp);
 		
 		menuBar.getMenus().addAll(fileMenu, helpMenu);
 

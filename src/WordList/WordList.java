@@ -1,4 +1,4 @@
-package VoxspellPrototype;
+package WordList;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import VoxspellScreens.MainScreen;
+import VoxspellScreens.PopupWindow;
 
 public class WordList extends ArrayList<Level> {
 

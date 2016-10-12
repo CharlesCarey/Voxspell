@@ -1,0 +1,5 @@
+File Help
+
+Pushing the file menu button and then clicking on ‘Load Files’ will allow you to choose to load in another word list. The word list must be a txt file and formatted as follows: each level name must start with a ‘%’ (ie. %Level 1), following the level you may list as many words as you want. 
+
+Once you have chosen a valid word list you will then be taken to a screen where you can choose which levels to unlock. You may then be quizzed on those words like normal.

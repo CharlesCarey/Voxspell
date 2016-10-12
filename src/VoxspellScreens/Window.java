@@ -1,4 +1,4 @@
-package VoxspellPrototype;
+package VoxspellScreens;
 
 import java.awt.Rectangle;
 

@@ -1,4 +1,4 @@
-package VoxspellPrototype;
+package WordList;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,6 +7,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.spi.FileTypeDetector;
 
+import VoxspellPrototype.VoxspellPrototype;
+import VoxspellScreens.PopupWindow;
+import VoxspellScreens.Window;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;

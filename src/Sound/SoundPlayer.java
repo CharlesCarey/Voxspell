@@ -1,4 +1,4 @@
-package VoxspellPrototype;
+package Sound;
 
 import javafx.concurrent.Task;
 
@@ -25,7 +25,10 @@ public class SoundPlayer extends Task<Void>{
 
 	@Override
 	/**
-	 * Calling ffmpeg to play sounds for the user in background
+	 * Calling ffmpeg to play sounds for the user in background.
+	 * 
+	 * These sounds are all free to use and come from https://www.freesound.org/
+	 * 
 	 */
 	protected Void call() throws Exception {
 

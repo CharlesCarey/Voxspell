@@ -1,8 +1,8 @@
-package VoxspellPrototype;
+package Sound;
 
 import javafx.concurrent.Task;
 
-class FestivalSpeakTask extends Task<Void> {
+public class FestivalSpeakTask extends Task<Void> {
 
 	private String _word;
 	private static double _speed = 1.0;

@@ -1,4 +1,4 @@
-package VoxspellPrototype;
+package WordList;
 
 import java.util.ArrayList;
 import java.util.HashMap;

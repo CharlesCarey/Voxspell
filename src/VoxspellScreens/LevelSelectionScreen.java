@@ -1,4 +1,4 @@
-package VoxspellPrototype;
+package VoxspellScreens;
 
 import java.awt.MouseInfo;
 import java.awt.Point;
@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import VoxspellPrototype.VoxspellPrototype;
+import WordList.Level;
+import WordList.WordList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;

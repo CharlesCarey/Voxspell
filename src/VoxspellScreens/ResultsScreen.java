@@ -1,7 +1,11 @@
-package VoxspellPrototype;
+package VoxspellScreens;
 
 import java.util.HashMap;
 
+import Sound.SoundPlayer;
+import VoxspellPrototype.VoxspellPrototype;
+import WordList.Level;
+import WordList.WordList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
