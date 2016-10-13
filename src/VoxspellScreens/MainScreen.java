@@ -50,7 +50,7 @@ public class MainScreen extends Parent {
 	private final String BTN_STATS_TEXT = "View Stats";
 	private final String BTN_CLEAR_TEXT = "Clear Stats";
 	private final String BTN_QUIT_TEXT = "Quit";
-	private final String BTN_OPTIONS_TEXT = "Options";
+	private final String BTN_OPTIONS_TEXT = "Voice Options";
 	private final String BTN_COLOR = "#FFD464";
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
 	private final String BTN_FONT_COLOR = "#F5F5F5";
@@ -89,6 +89,7 @@ public class MainScreen extends Parent {
 
 		//Create the menu
 		MenuBar menuBar = new MenuBar();
+		menuBar.setStyle("-fx-background-color: " + BTN_COLOR);
 		menuBar.setPrefWidth(_window.GetWidth());
 
 		Menu fileMenu = new Menu();
@@ -166,7 +167,7 @@ public class MainScreen extends Parent {
 		this.getChildren().add(vRoot);
 
 		// Set root node color
-		root.setStyle("-fx-background-color: " + "#A7DBDB" + ";");
+		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 	}
 
 	/**
@@ -440,14 +441,14 @@ public class MainScreen extends Parent {
 		btnNew.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				_window.SetWindowScene(new Scene(new LevelSelectionScreen(_window, "Normal_Quiz"), _window.GetWidth(), _window.GetHeight()));
+				_window.SetWindowScene(new Scene(new LevelSelectionScreen(_window, "NORMAL_QUIZ"), _window.GetWidth(), _window.GetHeight()));
 			}	
 		});
 
 		btnReview.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				_window.SetWindowScene(new Scene(new LevelSelectionScreen(_window, "Review_Quiz"), _window.GetWidth(), _window.GetHeight()));
+				_window.SetWindowScene(new Scene(new LevelSelectionScreen(_window, "REVIEW_QUIZ"), _window.GetWidth(), _window.GetHeight()));
 			}	
 		});
 

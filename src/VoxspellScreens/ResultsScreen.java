@@ -27,7 +27,8 @@ public class ResultsScreen extends Parent {
 	private Window _window;
 
 	// Content styling constants
-	private final String BTN_RETURN_TEXT = "Return";
+	private final String BTN_RETURN_TEXT = "Return To Main Menu";
+	private final String BTN_RETURN_TO_LVL_SELECT_TEXT = "Return To Level Select";
 	private final String BTN_TESTED_WORDS_TEXT = "Tested Words";
 	private final String BTN_REWARD_TEXT = "Reward";
 	private final int VBX_SPACING = 50;
@@ -42,7 +43,7 @@ public class ResultsScreen extends Parent {
 	private final double BTNWIDTH_SCREENWIDTH_RATIO = 0.666;
 	private final int BTN_HEIGHT = 70;
 
-	public ResultsScreen(Window window, int correctWords, int wordListLength, String listName, HashMap<String, String> userAttempts) {
+	public ResultsScreen(Window window, int correctWords, int wordListLength, String listName, HashMap<String, String> userAttempts, String quizType) {
 		this._window = window;
 
 		//Updating the users daily goals to show that they have done a quiz
@@ -58,7 +59,7 @@ public class ResultsScreen extends Parent {
 		}
 		
 		// Create root pane and set its size to whole window
-		VBox root = new VBox(VBX_SPACING);
+		VBox root = new VBox(VBX_SPACING/2);
 		root.setPrefWidth(_window.GetWidth());
 		root.setPrefHeight(_window.GetHeight());
 		root.setPadding(new Insets(TOP_BOTTOM_PADDING, SIDE_PADDING, TOP_BOTTOM_PADDING, SIDE_PADDING));
@@ -108,10 +109,12 @@ public class ResultsScreen extends Parent {
 		final String name = listName;
 		final HashMap<String, String> attempts = userAttempts;
 
+		final String typeOfQuiz = quizType;
+		
 		btnTestedWords.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {
-				_window.SetWindowScene(new Scene(new TestedWordsScreen(_window, attempts, words, length, name)));
+				_window.SetWindowScene(new Scene(new TestedWordsScreen(_window, attempts, words, length, name, typeOfQuiz)));
 			}
 		});
 
@@ -132,9 +135,26 @@ public class ResultsScreen extends Parent {
 			}
 		});
 
+		//Button to return to level select
+		Button btnReturnToLVLSelect;
+		btnReturnToLVLSelect = new Button(BTN_RETURN_TO_LVL_SELECT_TEXT);
+		btnReturnToLVLSelect.setPrefWidth(BTNWIDTH_SCREENWIDTH_RATIO * _window.GetWidth());
+		btnReturnToLVLSelect.setPrefHeight(BTN_HEIGHT);
+		btnReturnToLVLSelect.setAlignment(Pos.CENTER);
+		btnReturnToLVLSelect.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+				" -fx-base: " + BTN_COLOR + ";" + 
+				" -fx-text-fill: " + BTN_FONT_COLOR + ";");	
+
+		btnReturnToLVLSelect.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent arg0) {
+				_window.SetWindowScene(new Scene(new LevelSelectionScreen(_window, typeOfQuiz), _window.GetWidth(), _window.GetHeight()));
+			}
+		});
+		
 		// Add root node to current scene.
 		root.setAlignment(Pos.CENTER);
-		root.getChildren().addAll(txtResults, btnReward, btnTestedWords, btnReturn);		
+		root.getChildren().addAll(txtResults, btnReward, btnTestedWords, btnReturnToLVLSelect, btnReturn);		
 		this.getChildren().addAll(root);		
 		root.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 

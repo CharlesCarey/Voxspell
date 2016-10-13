@@ -70,9 +70,9 @@ public class LevelSelectionScreen extends Parent {
 		super();
 
 		//Checking what type of quiz the user wants
-		if(quizType.equals("Review_Quiz")) {
+		if(quizType.equals("REVIEW_QUIZ")) {
 			_quizType = QuizType.REVIEW_QUIZ;
-		} else if (quizType.equals("Normal_Quiz")) {
+		} else if (quizType.equals("NORMAL_QUIZ")) {
 			_quizType = QuizType.NORMAL_QUIZ;
 		}
 

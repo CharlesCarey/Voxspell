@@ -81,6 +81,7 @@ public class QuizScreen extends Parent {
 	private boolean _firstGuess = true;
 	private int _correctWords = 0;
 	private HashMap<String, String> _userAttempts = new HashMap<String, String>();
+	private LevelSelectionScreen.QuizType _quizType;
 
 	private Image GreenCircle;
 	private Image OrangeCircle;
@@ -89,6 +90,8 @@ public class QuizScreen extends Parent {
 
 
 	public QuizScreen(Window window, String wordlistName, LevelSelectionScreen.QuizType quizType) {
+		
+		_quizType = quizType;
 
 		//Setting up the circle images
 		File greenCircleFile = new File("./images/green-circle.png");
@@ -471,7 +474,7 @@ public class QuizScreen extends Parent {
 			_countDownTimer.stop();
 			
 			//Open the results screen
-			_window.SetWindowScene(new Scene(new ResultsScreen(_window, _correctWords, _words.size(), _level, _userAttempts), _window.GetWidth(), _window.GetHeight()));
+			_window.SetWindowScene(new Scene(new ResultsScreen(_window, _correctWords, _words.size(), _level, _userAttempts, _quizType.name()), _window.GetWidth(), _window.GetHeight()));
 
 			return false;
 		}

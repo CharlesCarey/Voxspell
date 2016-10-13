@@ -41,7 +41,7 @@ public class TestedWordsScreen extends Parent {
 	 * @param wordListLength
 	 * @param listName
 	 */
-	public TestedWordsScreen(Window window, HashMap<String, String> attempts, int correctWords, int wordListLength, String listName) {
+	public TestedWordsScreen(Window window, HashMap<String, String> attempts, int correctWords, int wordListLength, String listName, String quizType) {
 		this._window = window;
 		this.userAttempts = attempts;
 		
@@ -60,12 +60,13 @@ public class TestedWordsScreen extends Parent {
 		final int mastered = correctWords;
 		final int size = wordListLength;
 		final String levelName = listName;
+		final String typeOfQuiz = quizType;
 		
 		returnToMenuBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent arg0) {
-				_window.SetWindowScene(new Scene(new ResultsScreen(_window, mastered, size, levelName, userAttempts), _window.GetWidth(), _window.GetHeight()));
+				_window.SetWindowScene(new Scene(new ResultsScreen(_window, mastered, size, levelName, userAttempts, typeOfQuiz), _window.GetWidth(), _window.GetHeight()));
 			}
 			
 		});
