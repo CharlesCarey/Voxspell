@@ -21,6 +21,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * 
+ * @author Charles Carey & Nathan Kear
+ *
+ */
 public class OptionsScreen extends Parent {
 
 	private Window _window;

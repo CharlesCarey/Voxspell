@@ -44,6 +44,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
+/**
+ * 
+ * @author Charles Carey & Nathan Kear
+ *
+ */
 public class QuizScreen extends Parent {
 
 	private Window _window;

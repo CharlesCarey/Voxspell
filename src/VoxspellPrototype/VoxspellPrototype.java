@@ -10,6 +10,11 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+/**
+ * 
+ * @author Charles Carey & Nathan Kear
+ *
+ */
 public class VoxspellPrototype extends Application {
 
 	// Global constants (naughty public static!!)

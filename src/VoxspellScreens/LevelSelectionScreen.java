@@ -33,6 +33,11 @@ import javafx.scene.text.Text;
 import javafx.scene.control.ChoiceBox;
 import javafx.util.Duration;
 
+/**
+ * 
+ * @author Charles Carey & Nathan Kear
+ *
+ */
 public class LevelSelectionScreen extends Parent {
 
 	private Window _window;

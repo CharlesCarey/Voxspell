@@ -28,7 +28,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-
+/**
+ * 
+ * @author Charles Carey & Nathan Kear
+ *
+ */
 public class MainScreen extends Parent {
 
 	private Window _window;
@@ -38,12 +42,15 @@ public class MainScreen extends Parent {
 	private final String WordsTextedTXT = "Words Tested Today:       ";
 	private final String MasteredWordsTXT = "Words Mastered Today:   ";
 	private final String QuizzesDoneTXT = "Quizzes Done Today:       ";
+	private final String ClearingStatsTXT = "Are you sure you want to clear your statistics? Clearing your statistics will"
+			+ " also clear the word lists you have currently loaded!";
 	private final String DailyGoalsAchievedTXT = "Daily Goals Achieved:   ";
 	private final int BUTTON_SEPERATION = 6; 
 	private final int MENU_BAR_PADDING = 10;
 	private final double MENUBAR_SCREENWIDTH_RATIO = 0.333;
 	private final int TITLE_FONT_SIZE = VoxspellPrototype.TXT_FONT_SIZE;
 	private final int TXT_FONT_SIZE = VoxspellPrototype.TXT_FONT_SIZE - 8;
+	private final int MENU_FONT_SIZE = VoxspellPrototype.TXT_FONT_SIZE - 17;
 	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final String BTN_NEW_TEXT = "New Quiz";
 	private final String BTN_REVIEW_TEXT = "Review Mistakes";
@@ -56,6 +63,7 @@ public class MainScreen extends Parent {
 	private final String BTN_FONT_COLOR = "#F5F5F5";
 	private final String TXT_FONT_COLOR = "#F5F5F5";
 	private final String BORDER_COLOR = "#D4EDF4";
+	private final int CLEAR_STATS_WRAPPING_WIDTH = 525;
 
 	private final int TEXT_CEILING_SEPERATION = 160;
 
@@ -129,7 +137,7 @@ public class MainScreen extends Parent {
 			
 		});
 
-		MenuItem optionsHelp = new MenuItem("Options Help");
+		MenuItem optionsHelp = new MenuItem("Voice Options Help");
 		optionsHelp.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -471,7 +479,8 @@ public class MainScreen extends Parent {
 				confirmationVB.setPrefWidth(confirmationStage.getWidth());
 				confirmationVB.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 				
-				Text confirmationText = new Text("Are you sure you want to clear your statistics?");
+				Text confirmationText = new Text(ClearingStatsTXT);
+				confirmationText.setWrappingWidth(CLEAR_STATS_WRAPPING_WIDTH);
 				confirmationText.setTextAlignment(TextAlignment.CENTER);
 				confirmationText.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
 						" -fx-fill: " + TXT_FONT_COLOR + ";");
@@ -489,7 +498,8 @@ public class MainScreen extends Parent {
 					public void handle(ActionEvent arg0) {
 						confirmationStage.close();
 						PopupWindow.DeployPopupWindow("", "Cleared Statistics");
-						WordList.GetWordList().ClearStats();						
+						WordList.GetWordList().ClearStats();	
+						WordList.GetWordList().RemoveWordLists();
 					}
 					
 				});

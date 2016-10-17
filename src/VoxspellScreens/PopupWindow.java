@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 
 /**
  * Create pop-up window that displays simple text.
- * @author nathan
+ * @author Charles Carey & Nathan Kear
  *
  */
 public class PopupWindow {

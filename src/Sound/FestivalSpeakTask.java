@@ -2,6 +2,12 @@ package Sound;
 
 import javafx.concurrent.Task;
 
+/**
+ * This class handles all voice synthesis for the program
+ * 
+ * @author Charles and Nathan Kear
+ *
+ */
 public class FestivalSpeakTask extends Task<Void> {
 
 	private String _word;

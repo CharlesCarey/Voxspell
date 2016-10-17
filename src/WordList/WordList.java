@@ -19,6 +19,11 @@ import java.util.Map;
 import VoxspellScreens.MainScreen;
 import VoxspellScreens.PopupWindow;
 
+/**
+ * 
+ * @author Charles Carey & Nathan Kear
+ *
+ */
 public class WordList extends ArrayList<Level> {
 
 	private static ArrayList<String> _addedWordLists = new ArrayList<String>();
@@ -677,5 +682,10 @@ public class WordList extends ArrayList<Level> {
 	public void removeFromLevelFailedList(String word, String levelName) {
 		Level level = getLevelFromName(levelName);
 		level.removeFromFailed(word);
+	}
+
+	public void RemoveWordLists() {
+		_addedWordLists.clear();
+		this.removeRange(12, this.size());
 	}
 }

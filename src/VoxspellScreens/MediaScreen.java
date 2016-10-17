@@ -24,6 +24,11 @@ import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.discovery.NativeDiscovery;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
+/**
+ * 
+ * @author Nathan Kear
+ *
+ */
 public class MediaScreen extends Parent {
 	
 	private final int BTN_HEIGHT = 50;

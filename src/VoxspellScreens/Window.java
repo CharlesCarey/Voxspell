@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 /**
  * JavaFX window wrapper
- * @author nathan
+ * @author Nathan Kear
  *
  */
 public class Window {

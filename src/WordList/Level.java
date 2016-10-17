@@ -3,6 +3,11 @@ package WordList;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * 
+ * @author Charles Carey & Nathan Kear
+ *
+ */
 public class Level {
 
 	private boolean _isUnlocked = false;
