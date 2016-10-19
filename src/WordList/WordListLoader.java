@@ -44,24 +44,35 @@ public class WordListLoader extends Parent{
 		int levelStart = WordList.GetWordList().size();
 		File newWordList = fileChooser.showOpenDialog(new Stage());
 
-		//Checking if the file is the correct type
-		boolean isOKToLoad = fileTypeChecker(newWordList);
+		//Checking that the user actually selected a file and didn't close the filechooser
+		if(newWordList != null) {
 
-		//Checking if the file is not empty 
-		boolean isNotEmpty = isFileEmpty(newWordList);
-		
-		//If the file type is ok then load it, else show the user that the file was invalid
-		if(isOKToLoad && isNotEmpty) {
-			try {
-				WordList.loadLevel(newWordList);
-				int levelEnd = WordList.GetWordList().size();
-				WordList.GetWordList().addWordList(newWordList.getAbsolutePath());
-				ChooseLevelScreen(levelStart, levelEnd);
-			} catch (Exception e) {
+			//Checking if the file is the correct type
+			boolean isOKToLoad = fileTypeChecker(newWordList);
+
+			//Checking if the file is not empty and that the first lines are laid our correctly
+			boolean isNotEmpty = isFileEmpty(newWordList);
+
+			//If the file type is ok then load it, else show the user that the file was invalid
+			if(isOKToLoad && isNotEmpty) {
+				try {
+					WordList.loadLevel(newWordList);
+					int levelEnd = WordList.GetWordList().size();
+					WordList.GetWordList().addWordList(newWordList.getAbsolutePath());
+					ChooseLevelScreen(levelStart, levelEnd);
+				} catch (Exception e) {
+					PopupWindow.DeployPopupWindow("Warning!", "The layout of the levels in the text files is invalid! Please try again!");
+				}
+				
+			//Else if the file is a .txt file but it is not laid out properly then tell the user they layout is invalid
+			} else if(isOKToLoad && !isNotEmpty) {
 				PopupWindow.DeployPopupWindow("Warning!", "The layout of the levels in the text files is invalid! Please try again!");
+			
+			//Else the file type is invalid so tell the user that they have chosen the wrong file type
+			} else {
+				PopupWindow.DeployPopupWindow("Warning!", "The file type appears to be invalid. Please try again!");
 			}
-		} else {
-			PopupWindow.DeployPopupWindow("Warning!", "The file type appears to be invalid. Please try again!");
+
 		}
 	}
 
@@ -84,45 +95,45 @@ public class WordListLoader extends Parent{
 	 * This method checks the file to load has at least one level with at least one word
 	 */
 	public boolean isFileEmpty(File f) {
-		
+
 		boolean fileIsOK = true;
-		
+
 		try {
 			BufferedReader emptyChecker = new BufferedReader(new FileReader(f));
-			
+
 			//Creating a counter to check there are two lines and the first one starts with %
 			int count = 0;
-						
+
 			String line = "";
-			
+
 			while((line = emptyChecker.readLine()) != null) {
 				count++;
-				
+
 				//Checking the first line starts with w %
 				if(count == 1) {
 					if(line.charAt(0) != '%') {
 						fileIsOK = false;
 					}
-					
-				//Checking the second line does not contain a %
+
+					//Checking the second line does not contain a %
 				} else if (count == 2) {
 					if(line.contains("%")) {
 						fileIsOK = false;
 					}
 				}
 			}
-			
+
 			if(count < 2) {
 				fileIsOK = false;
 			}
-			
+
 			emptyChecker.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		return fileIsOK;
-		
+
 	}
 
 	/**

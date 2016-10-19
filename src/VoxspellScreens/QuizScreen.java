@@ -377,7 +377,7 @@ public class QuizScreen extends Parent {
 
 				_quizProgress.get(_wordIndex).setImage(GreenCircle);
 
-				//PLaying the correct sound
+				//Playing the correct sound
 				SoundPlayer.userWasCorrect(true);
 				new SoundPlayer().run();
 
@@ -403,7 +403,7 @@ public class QuizScreen extends Parent {
 				new SoundPlayer().run();
 				
 				//Saying the word was incorrect, spell it again
-				speechOutput = speechOutput + "Incorrect.. try again.. " + currentWord() + ".. " + currentWord() + ".";
+				speechOutput = speechOutput + "Incorrect... try again... " + currentWord() + "... ..." + currentWord() + ".";
 				_firstGuess = false;
 			}
 		} else {
@@ -416,6 +416,10 @@ public class QuizScreen extends Parent {
 				
 				//Saying user got it right
 				speechOutput = speechOutput + "Correct..";
+				
+				//Playing the correct sound
+				SoundPlayer.userWasCorrect(true);
+				new SoundPlayer().run();
 				
 				//Setting the quiz progress to be orange to indicate the user faulted
 				_quizProgress.get(_wordIndex).setImage(OrangeCircle);
