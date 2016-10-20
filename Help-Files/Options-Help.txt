@@ -1,3 +1,5 @@
 Voice Options Help
 
 Pressing the ‘Voice Options’ button will take you to the options menu. Here you can change the voice and speed to settings that you like!
+
+When you change one of the options you will hear the voice speaking to you so you can check if you like the new settings.
