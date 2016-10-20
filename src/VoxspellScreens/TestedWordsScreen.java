@@ -19,6 +19,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
+/**
+ * 
+ * @author Charles Carey
+ *
+ */
 public class TestedWordsScreen extends Parent {
 
 	private Window _window;
@@ -28,6 +33,8 @@ public class TestedWordsScreen extends Parent {
 	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final int BTN_HEIGHT = 70;
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
+	private final String FONT = VoxspellPrototype.FONT;
+
 
 	private final HashMap<String, String> userAttempts;
 
@@ -41,6 +48,7 @@ public class TestedWordsScreen extends Parent {
 	 * @param wordListLength
 	 * @param listName
 	 */
+	@SuppressWarnings("unchecked")
 	public TestedWordsScreen(Window window, HashMap<String, String> attempts, int correctWords, int wordListLength, String listName, String quizType) {
 		this._window = window;
 		this.userAttempts = attempts;
@@ -53,15 +61,17 @@ public class TestedWordsScreen extends Parent {
 		returnToMenuBtn.setPrefWidth(_window.GetWidth());
 		returnToMenuBtn.setPrefHeight(BTN_HEIGHT);
 		returnToMenuBtn.setAlignment(Pos.CENTER);
-		returnToMenuBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		returnToMenuBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " " + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 		
+		//Creating final variables to use in the event handler method for the return to results menu button
 		final int mastered = correctWords;
 		final int size = wordListLength;
 		final String levelName = listName;
 		final String typeOfQuiz = quizType;
 		
+		//Adding functionality to the return to menu button
 		returnToMenuBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -95,12 +105,14 @@ public class TestedWordsScreen extends Parent {
 		ObservableList<Map.Entry<String, String>> data = FXCollections.observableArrayList(attempts.entrySet());
 		final TableView<Map.Entry<String,String>> resultsTable = new TableView<>(data);
 
+		//Formatting the table and adding the columns 
 		resultsTable.getColumns().addAll(wordsCol, attemptsCol);
 		resultsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		resultsTable.setStyle("-fx-base: " + BACK_COLOR);
 		resultsTable.setMinHeight(_window.GetHeight());
 		resultsTable.setMinWidth(_window.GetWidth());
 		
+		//Setting the size and formatting the root
 		root.setMinHeight(_window.GetHeight());
 		root.setMinWidth(_window.GetWidth());
 		root.getChildren().addAll(returnToMenuBtn, resultsTable);

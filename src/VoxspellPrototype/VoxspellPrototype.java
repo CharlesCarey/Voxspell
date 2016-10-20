@@ -17,7 +17,7 @@ import javafx.stage.WindowEvent;
  */
 public class VoxspellPrototype extends Application {
 
-	// Global constants (naughty public static!!)
+	//Global constants for use throughout the program
 	public static final String LIGHT_BLUE = "#A7DBDB";
 	public static final String DARK_BLUE = "#FFD464";
 	public static final String WHITE = "#F5F5F5";
@@ -27,10 +27,11 @@ public class VoxspellPrototype extends Application {
 	public static final int TXT_FONT_SIZE = 30;
 	public static final int TXT_FONT_SIZE_FINE = 18;
 	public static final int QUIZ_LENGTH = 10;
-	
+	public static final String FONT = " sansserif";
+
 	private Window _window;
 	
-	private final String WINDOW_TITLE = "VoxSpell";
+	private final String WINDOW_TITLE = "VOXSPELL";
 	private final int WINDOW_WIDTH = 900;
 	private final int WINDOW_HEIGHT = 563;
 
@@ -38,12 +39,16 @@ public class VoxspellPrototype extends Application {
 	}
 
 	@Override
+	/**
+	 * This method handles the launching of the application
+	 */
 	public void start(Stage stage) throws Exception {
 		Platform.setImplicitExit(false);
 		
 		// Fix window size
 		stage.setResizable(false);
 		
+		//If the user clicks the 'x' exit button then call platform.exit() which in turn will trigger the saving of files
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent arg0) {

@@ -24,6 +24,8 @@ public class PopupWindow {
 	private final static String BORDER_COLOR = "#D4EDF4";
 	private final static int SIDE_PADDING = 10;
 	private final static int TOP_BOTTOM_PADDING = 60;
+	private final static String FONT = VoxspellPrototype.FONT;
+
 
 	/**
 	 * Deploy single pop-up window.
@@ -34,24 +36,27 @@ public class PopupWindow {
 		Stage popupStage = new Stage();
 
 		VBox root = new VBox(5);
+		
+		//Formatting the root VBox
 		root.setPadding(new Insets(TOP_BOTTOM_PADDING, SIDE_PADDING, TOP_BOTTOM_PADDING, SIDE_PADDING));
 		root.setMinHeight(POPWINDOW_HEIGHT);
 		root.setMinWidth(POPWINDOW_WIDTH);
 		
-		// Build text to display.
+		// Build text to display for title and content
 		Text titleText = new Text(title);
-		titleText.setStyle("-fx-font: " + (TXT_FONT_SIZE  + 10) + " arial;" +
+		titleText.setStyle("-fx-font: " + (TXT_FONT_SIZE  + 10) + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		titleText.setTextAlignment(TextAlignment.CENTER);
 		titleText.setWrappingWidth(POPWINDOW_WIDTH - 100);
 
 		Text popupText = new Text(content);
 		popupText.setTextAlignment(TextAlignment.CENTER);
-		popupText.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
+		popupText.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		popupText.setWrappingWidth(POPWINDOW_WIDTH - 50);
 		root.setAlignment(Pos.CENTER);
 
+		//Creating the title HBox to hold the title
 		HBox titleHBox = new HBox();
 		titleHBox.setPrefWidth(POPWINDOW_WIDTH - 100);
 		titleHBox.getChildren().add(titleText);
@@ -63,6 +68,7 @@ public class PopupWindow {
 				"-fx-border-color: " + BORDER_COLOR + ";");
 		titleHBox.setAlignment(Pos.CENTER);
 
+		//Creating the HBox to hold the content text
 		HBox contentHBox = new HBox();
 		contentHBox.setPrefWidth(POPWINDOW_WIDTH - 50);
 		contentHBox.getChildren().add(popupText);
@@ -74,6 +80,7 @@ public class PopupWindow {
 				"-fx-border-color: " + BORDER_COLOR + ";");
 		contentHBox.setAlignment(Pos.CENTER);
 
+		//If title parameter was an empty string then just show the content, else show both content and title
 		if(title.isEmpty()) {
 			contentHBox.setPrefHeight(root.getHeight());
 			root.getChildren().addAll(contentHBox);

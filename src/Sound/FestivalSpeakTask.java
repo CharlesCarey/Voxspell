@@ -57,6 +57,9 @@ public class FestivalSpeakTask extends Task<Void> {
 	}
 
 	@Override
+	/**
+	 * This method says the word for the user in the background
+	 */
 	protected Void call() throws Exception {
 
 		// Set the voice in festival

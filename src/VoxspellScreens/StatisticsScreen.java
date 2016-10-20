@@ -3,13 +3,9 @@ package VoxspellScreens;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import VoxspellPrototype.VoxspellPrototype;
 import WordList.Level;
 import WordList.WordList;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -36,15 +32,21 @@ public class StatisticsScreen extends Parent {
 	private final String BTN_RETURN_TEXT = "Return";
 	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
 	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
+	private final int TAB_WIDTH;
 	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final double BTNWIDTH_SCREENWIDTH_RATIO = 1.00;
 	private final int BTN_HEIGHT = 70;
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
+	private final String FONT = VoxspellPrototype.FONT;
 	
 	public StatisticsScreen(Window window) {
 		
+		//setting the window
 		this._window = window;
-				
+		
+		//Since window has been set, the TAB_WIDTH field can be calculated
+		TAB_WIDTH =  _window.GetWidth()/(WordList.GetWordList().size() + 3);
+		
 		VBox root = new VBox();
 		
 		//Putting the stats pane into a scroll pane
@@ -69,10 +71,11 @@ public class StatisticsScreen extends Parent {
 
 		bp.setCenter(statsTabPane);
 		
-		int tabWidth = _window.GetWidth()/(numOfTabs + 3);
+		//Setting the tab width
+		int tabWidth = TAB_WIDTH;
 		statsTabPane.setTabMinWidth(tabWidth);
 		
-		statsTabPane.setStyle("-fx-base: #89bdd3");
+		statsTabPane.setStyle("-fx-base: " + BACK_COLOR);
 		
 		//Looping through the number of levels and creating a tab for each one
 		for(int i = 0; i < numOfTabs; i++) {
@@ -84,15 +87,17 @@ public class StatisticsScreen extends Parent {
 			populateStatsTable(wordlist.get(i), t);
 		}
 
+		//Setting tab pane width and height
 		statsTabPane.setPrefHeight(_window.GetHeight());
 		statsTabPane.setPrefWidth(_window.GetWidth());
 		
+		//Creating the return button
 		Button btnReturn;
 		btnReturn = new Button(BTN_RETURN_TEXT);
 		btnReturn.setPrefWidth(BTNWIDTH_SCREENWIDTH_RATIO * _window.GetWidth());
 		btnReturn.setPrefHeight(BTN_HEIGHT);
 		btnReturn.setAlignment(Pos.CENTER);
-		btnReturn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		btnReturn.setStyle("-fx-font: " + BTN_FONT_SIZE + " " +  FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");	
 		btnReturn.setOnAction(new EventHandler<ActionEvent>() {

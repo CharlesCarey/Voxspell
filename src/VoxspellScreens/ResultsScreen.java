@@ -42,6 +42,8 @@ public class ResultsScreen extends Parent {
 	private final int TOP_BOTTOM_PADDING = 60;
 	private final double BTNWIDTH_SCREENWIDTH_RATIO = 0.666;
 	private final int BTN_HEIGHT = 70;
+	private final String FONT = VoxspellPrototype.FONT;
+
 
 	public ResultsScreen(Window window, int correctWords, int wordListLength, String listName, HashMap<String, String> userAttempts, String quizType) {
 		this._window = window;
@@ -70,7 +72,7 @@ public class ResultsScreen extends Parent {
 		txtResults.prefWidth(_window.GetWidth());
 		txtResults.setTextAlignment(TextAlignment.CENTER);
 		txtResults.setWrappingWidth(_window.GetWidth());
-		txtResults.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
+		txtResults.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 		// Create button that links to reward video
@@ -79,7 +81,7 @@ public class ResultsScreen extends Parent {
 		btnReward.setPrefWidth(BTNWIDTH_SCREENWIDTH_RATIO * _window.GetWidth());
 		btnReward.setPrefHeight(BTN_HEIGHT);
 		btnReward.setAlignment(Pos.CENTER);
-		btnReward.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		btnReward.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
@@ -100,15 +102,15 @@ public class ResultsScreen extends Parent {
 		btnTestedWords.setPrefWidth(BTNWIDTH_SCREENWIDTH_RATIO * _window.GetWidth());
 		btnTestedWords.setPrefHeight(BTN_HEIGHT);
 		btnTestedWords.setAlignment(Pos.CENTER);
-		btnTestedWords.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		btnTestedWords.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
+		//Creating final versions of variables for the tested words button
 		final int words = correctWords;
 		final int length = wordListLength;
 		final String name = listName;
 		final HashMap<String, String> attempts = userAttempts;
-
 		final String typeOfQuiz = quizType;
 		
 		btnTestedWords.setOnAction(new EventHandler<ActionEvent>() {
@@ -124,7 +126,7 @@ public class ResultsScreen extends Parent {
 		btnReturn.setPrefWidth(BTNWIDTH_SCREENWIDTH_RATIO * _window.GetWidth());
 		btnReturn.setPrefHeight(BTN_HEIGHT);
 		btnReturn.setAlignment(Pos.CENTER);
-		btnReturn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		btnReturn.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");	
 
@@ -141,7 +143,7 @@ public class ResultsScreen extends Parent {
 		btnReturnToLVLSelect.setPrefWidth(BTNWIDTH_SCREENWIDTH_RATIO * _window.GetWidth());
 		btnReturnToLVLSelect.setPrefHeight(BTN_HEIGHT);
 		btnReturnToLVLSelect.setAlignment(Pos.CENTER);
-		btnReturnToLVLSelect.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		btnReturnToLVLSelect.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");	
 
@@ -164,11 +166,12 @@ public class ResultsScreen extends Parent {
 		} else {
 			// Unlock reward and next level.
 
-//			boolean levelAboveLocked = false;
+			//Getting the wordlist
 			WordList wordList = WordList.GetWordList();
 
 			int index = 0;
 
+			//Looping through to find the level
 			for(int i = 0; i < wordList.size(); i++) {
 				if(wordList.get(i).levelName().equals(listName)) {
 					index = i;
@@ -176,29 +179,16 @@ public class ResultsScreen extends Parent {
 				}
 			}
 
+			//Seeing if the level needs to be unlocked
 			if ((index + 1) <= (wordList.size() - 1)) {
 				Level levelToUnlock = WordList.GetWordList().get(index + 1);
 				if(!levelToUnlock.isUnlocked()) {
+					//Unlocking level and deploying pop up
 					levelToUnlock.unlockLevel();
 					PopupWindow.DeployPopupWindow("Congratulations!", levelToUnlock.levelName() + " unlocked!");
 				}
 			}
 			
-//			if (listName == WordList.GetWordList().HighestUnlockedLevel().levelName()) {
-//				String level = "";
-//
-//				// Deploy popup to inform user of new quiz level.
-//				if ((level = WordList.GetWordList().UnlockNextLevel()) != null) {
-//					if (level != null && !level.equals(""))
-//						PopupWindow.DeployPopupWindow("Congratulations!", level + " unlocked!");
-//				}
-//			} else if ((index + 1) <= (wordList.size() - 1)){
-//				if(!wordList.get(index + 1).isUnlocked()) {
-//					String level = wordList.get(index + 1).levelName();
-//					wordList.get(index + 1).unlockLevel();
-//					PopupWindow.DeployPopupWindow("Congratulations!", level + " unlocked!");
-//				}
-//			}
 		}	
 
 	}

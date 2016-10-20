@@ -9,7 +9,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -35,6 +34,7 @@ public class OptionsScreen extends Parent {
 	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
 	private final String TXT_FONT_COLOR = VoxspellPrototype.WHITE;
+	private final String FONT = VoxspellPrototype.FONT;
 	private final int OPTIONS_PADDING = 10;
 	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
 	private final Insets TXT_INSETS = new Insets(10, 10, 10, 30);
@@ -69,7 +69,7 @@ public class OptionsScreen extends Parent {
 		optionsLabel.setTextAlignment(TextAlignment.CENTER);
 		optionsLabel.setWrappingWidth(_window.GetWidth());
 		
-		optionsLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" + 
+		optionsLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" + 
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		
 		//Creating a button to return to menu
@@ -77,7 +77,7 @@ public class OptionsScreen extends Parent {
 		
 		returnToMenuBtn.setPrefWidth(_window.GetWidth() - (OPTIONS_PADDING * 2));
 		returnToMenuBtn.setPrefHeight(_window.GetHeight()/8);
-		returnToMenuBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		returnToMenuBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
@@ -103,16 +103,19 @@ public class OptionsScreen extends Parent {
 				"Very Slow                                                                        "
 				);
 
+		//Formatting the voice speed box
 		final ChoiceBox<String> voiceSpeedComboBox = new ChoiceBox<String>(voiceSpeedOptions);
-		voiceSpeedComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + " arial; -fx-text-fill: " + TXT_FONT_COLOR + ";");
+		voiceSpeedComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + FONT + "; -fx-text-fill: " + TXT_FONT_COLOR + ";");
 		voiceSpeedComboBox.setPrefHeight(CMB_HEIGHT);
 		voiceSpeedComboBox.setPrefWidth(CMB_WIDTH);
 		voiceSpeedComboBox.setTooltip(new Tooltip("Select a talking speed"));
 		
+		//Getting the currently set voice speed
 		double voiceSpeed = FestivalSpeakTask.getSpeed();
 		
 		int voiceSpeedOptionsIndex = 0;
 		
+		//Finding out what the speed is to index the observable list of options
 		if(voiceSpeed == 1) {
 			//Normal voice
 			voiceSpeedOptionsIndex = 0;
@@ -124,10 +127,12 @@ public class OptionsScreen extends Parent {
 			voiceSpeedOptionsIndex = 2;
 		}
 		
+		//Setting the comobobox to show the currently set option
 		voiceSpeedComboBox.setValue(voiceSpeedOptions.get(voiceSpeedOptionsIndex));
 
+		//Creating the label so the user knows what the voice speed option is for
 		Label voiceSpeedLabel = new Label("Select voice speed");
-		voiceSpeedLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" + 
+		voiceSpeedLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + TXT_FONT_COLOR + ";");
 		voiceSpeedLabel.setPrefWidth(TXT_WIDTH);
@@ -141,14 +146,17 @@ public class OptionsScreen extends Parent {
 				"New Zealand Male Voice                                                 "
 				);
 
+		//Formatting the comobobox for voice type
 		final ChoiceBox<String> voiceTypeComboBox = new ChoiceBox<String>(voiceTypeOptions);
-		voiceTypeComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + " arial; -fx-text-fill: " + TXT_FONT_COLOR + ";");
+		voiceTypeComboBox.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + FONT + "; -fx-text-fill: " + TXT_FONT_COLOR + ";");
 		voiceTypeComboBox.setTooltip(new Tooltip("Select a voice"));
 		
+		//Getting the currently set voice
 		String voiceSelected = FestivalSpeakTask.getVoice();
 		
 		int voiceTypeOptionsIndex = 0;
 				
+		//Working out what the currently set voice is to index the observable list of voice type options
 		if(voiceSelected.equals("kal_diphone")) {
 			voiceTypeOptionsIndex = 0;
 		} else if (voiceSelected.equals("rab_diphone")) {
@@ -157,13 +165,15 @@ public class OptionsScreen extends Parent {
 			voiceTypeOptionsIndex = 2;
 		} 
 		
+		//Setting the value of the voice type combo box to the currently set voice type
 		voiceTypeComboBox.setValue(voiceTypeOptions.get(voiceTypeOptionsIndex));
 		
 		voiceTypeComboBox.setPrefHeight(CMB_HEIGHT);
 		voiceTypeComboBox.setPrefWidth(CMB_WIDTH);
 
+		//Creating label for the voice type
 		Label voiceTypeLabel = new Label("Select voice type");
-		voiceTypeLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" + 
+		voiceTypeLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + TXT_FONT_COLOR + ";");
 		voiceTypeLabel.setPrefWidth(TXT_WIDTH);
@@ -184,8 +194,11 @@ public class OptionsScreen extends Parent {
 				} else if (newValue.equals("New Zealand Male Voice                                                 ")) {
 					voice = "akl_nz_jdt_diphone";
 				}
+				//Change the festival voice
 				FestivalSpeakTask.changeVoice(voice);
-				new FestivalSpeakTask("Hello World!").run();
+				
+				//Play the voice so the user cans see if they like it
+				new FestivalSpeakTask("Hello!").run();
 			}
 
 		});
@@ -197,12 +210,18 @@ public class OptionsScreen extends Parent {
 					String oldValue, String newValue) {
 				if (newValue == "Normal") {
 					FestivalSpeakTask.SetSpeed(1.0);
+					
+					//Letting the user know what the new voice speed is like
 					new FestivalSpeakTask("Normal speed").run();
 				} else if (newValue == "Slow") {
 					FestivalSpeakTask.SetSpeed(1.5);
+					
+					//Letting the user know what the new voice speed is like
 					new FestivalSpeakTask("Slow speed").run();
 				} else {
 					FestivalSpeakTask.SetSpeed(2.0);
+					
+					//Letting the user know what the new voice speed is like
 					new FestivalSpeakTask("Very slow speed").run();
 				}
 			}

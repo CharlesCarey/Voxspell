@@ -26,8 +26,6 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.control.ChoiceBox;
@@ -59,6 +57,7 @@ public class LevelSelectionScreen extends Parent {
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
 	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
 	private final String TXT_FONT_COLOR = VoxspellPrototype.WHITE;
+	private final String FONT = VoxspellPrototype.FONT;
 	private final double TMR_TICK_RATE = 60.0;
 
 	private VBox _levelButtons;
@@ -151,7 +150,7 @@ public class LevelSelectionScreen extends Parent {
 		//Creating the label to tell the user what to do
 		Text levelSelectLabel = new Text("Please select which level you wish to start at. All levels below "
 				+ "the level you choose, and the level itself, will be unlocked!");
-		levelSelectLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
+		levelSelectLabel.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		levelSelectLabel.setWrappingWidth(_window.GetWidth());
 
@@ -164,7 +163,7 @@ public class LevelSelectionScreen extends Parent {
 		this.getChildren().add(root);
 
 		//levelSelect.setPromptText("Select a level");
-		levelSelect.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + " arial; -fx-text-fill: " + TXT_FONT_COLOR + ";");
+		levelSelect.setStyle("-fx-base: " + BTN_COLOR + "; -fx-font: " + BTN_FONT_SIZE + FONT + "; -fx-text-fill: " + TXT_FONT_COLOR + ";");
 		//levelSelect.setPrefWidth(_window.GetWidth() - (SELECTION_BAR_PADDING * 2));
 		levelSelect.setPrefHeight(30);
 		levelSelect.autosize();
@@ -214,7 +213,7 @@ public class LevelSelectionScreen extends Parent {
 		returnToMenuBtn.setPrefWidth(BTN_WIDTH);
 		returnToMenuBtn.setPrefHeight(BTN_HEIGHT);
 
-		returnToMenuBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		returnToMenuBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
@@ -234,7 +233,7 @@ public class LevelSelectionScreen extends Parent {
 
 		//Creating text to tell the user what this screen is
 		Text txtSelection = new Text(TXT_SELECT_LEVEL);
-		txtSelection.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
+		txtSelection.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		root.getChildren().add(txtSelection);
 
@@ -266,7 +265,7 @@ public class LevelSelectionScreen extends Parent {
 			if(_quizType == QuizType.NORMAL_QUIZ) {
 				//If the level is unlocked then make a button that allows a normal quiz to be played
 				if(level.isUnlocked()) {
-					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 							" -fx-base: " + BTN_COLOR + ";" + 
 							" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
@@ -279,7 +278,7 @@ public class LevelSelectionScreen extends Parent {
 
 					//Else this level is locked so grey out the button and tell the user it is locked if they try to click on it
 				} else {
-					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 							" -fx-base: " + BTN_LOCKED_COLOR + ";" + 
 							" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
@@ -293,7 +292,7 @@ public class LevelSelectionScreen extends Parent {
 			} else if(_quizType == QuizType.REVIEW_QUIZ) {
 				//If the level is unlocked then create a normal button for it showing number of failed words
 				if(level.isUnlocked()) {
-					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 							" -fx-base: " + BTN_COLOR + ";" + 
 							" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
@@ -318,7 +317,7 @@ public class LevelSelectionScreen extends Parent {
 
 					//Else the level is not unlocked so grey it out and let the user know it is locked if they click on it
 				} else {
-					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+					btn.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 							" -fx-base: " + BTN_LOCKED_COLOR + ";" + 
 							" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 

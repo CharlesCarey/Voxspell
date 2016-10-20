@@ -2,6 +2,12 @@ package Sound;
 
 import javafx.concurrent.Task;
 
+/**
+ * This class handles the sound effects for the quiz
+ * 
+ * @author Charles Carey
+ *
+ */
 public class SoundPlayer extends Task<Void>{
 
 	private static boolean _isCorrect;

@@ -5,7 +5,6 @@ import java.io.File;
 import VoxspellPrototype.VoxspellPrototype;
 import WordList.WordList;
 import WordList.WordListLoader;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -17,7 +16,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -50,13 +48,11 @@ public class MainScreen extends Parent {
 	private final double MENUBAR_SCREENWIDTH_RATIO = 0.333;
 	private final int TITLE_FONT_SIZE = VoxspellPrototype.TXT_FONT_SIZE;
 	private final int TXT_FONT_SIZE = VoxspellPrototype.TXT_FONT_SIZE - 8;
-	private final int MENU_FONT_SIZE = VoxspellPrototype.TXT_FONT_SIZE - 17;
 	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final String BTN_NEW_TEXT = "New Quiz";
 	private final String BTN_REVIEW_TEXT = "Review Mistakes";
 	private final String BTN_STATS_TEXT = "View Stats";
 	private final String BTN_CLEAR_TEXT = "Clear Stats";
-	private final String BTN_QUIT_TEXT = "Quit";
 	private final String BTN_OPTIONS_TEXT = "Voice Options";
 	private final String BTN_COLOR = "#FFD464";
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
@@ -64,8 +60,9 @@ public class MainScreen extends Parent {
 	private final String TXT_FONT_COLOR = "#F5F5F5";
 	private final String BORDER_COLOR = "#D4EDF4";
 	private final int CLEAR_STATS_WRAPPING_WIDTH = 525;
-
-	private final int TEXT_CEILING_SEPERATION = 160;
+	private final String FONT = VoxspellPrototype.FONT;
+	private final int CONFIRMATION_CLEAR_WIDTH = 550;
+	private final int CONFIRMATION_CLEAR_HEIGHT = 137;
 
 	//Fields for users daily progress
 	private static double _testedWords = 0;
@@ -100,6 +97,8 @@ public class MainScreen extends Parent {
 		menuBar.setStyle("-fx-background-color: " + BTN_COLOR);
 		menuBar.setPrefWidth(_window.GetWidth());
 
+		//Creating of the menu options
+		
 		Menu fileMenu = new Menu();
 		fileMenu.setText("File");
 
@@ -207,14 +206,14 @@ public class MainScreen extends Parent {
 		dailyGoalsTXT.setTextAlignment(TextAlignment.CENTER);
 
 
-		dailyGoalsTXT.setStyle("-fx-font: " + TITLE_FONT_SIZE + " sansserif;" +
+		dailyGoalsTXT.setStyle("-fx-font: " + TITLE_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 		//Making the HBox to store everything for the daily goals achieved 
 		HBox dailyGoalsHB = new HBox();
 
 		Text dailyGoalsAchieved = new Text (DailyGoalsAchievedTXT);
-		dailyGoalsAchieved.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
+		dailyGoalsAchieved.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 
@@ -286,7 +285,7 @@ public class MainScreen extends Parent {
 		
 		//Making the text for the words tested
 		Text wordsTestedTxt = new Text(WordsTextedTXT);
-		wordsTestedTxt.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
+		wordsTestedTxt.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 		wordsTestedHB.getChildren().addAll(wordsTestedTxt, wordsTestedPB);
@@ -305,7 +304,7 @@ public class MainScreen extends Parent {
 
 		//Making the text for the words mastered today
 		Text masteredWordsTXT = new Text(MasteredWordsTXT);
-		masteredWordsTXT.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
+		masteredWordsTXT.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 		
 		wordsMasteredHB.getChildren().addAll(masteredWordsTXT, wordsMasteredPB);
@@ -322,7 +321,7 @@ public class MainScreen extends Parent {
 		
 		//Making the text for the quizzes done today
 		Text quizesDoneTXT = new Text(QuizzesDoneTXT);
-		quizesDoneTXT.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
+		quizesDoneTXT.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 		quizzesDoneHB.getChildren().addAll(quizesDoneTXT, quizzesDonePB);
@@ -339,7 +338,7 @@ public class MainScreen extends Parent {
 	 * @return
 	 */
 	private Pane buildMenuBar(double desiredWidth) {
-		Button btnNew, btnReview, btnStats, btnClear, btnQuit, btnOptions;
+		Button btnNew, btnReview, btnStats, btnClear, btnOptions;
 
 		// Create vbox with specific dimensions
 		VBox menuButtons = new VBox(BUTTON_SEPERATION);
@@ -358,26 +357,22 @@ public class MainScreen extends Parent {
 		btnReview = new Button(BTN_REVIEW_TEXT);
 		btnStats = new Button(BTN_STATS_TEXT);
 		btnClear = new Button(BTN_CLEAR_TEXT);
-		btnQuit = new Button(BTN_QUIT_TEXT);
 		btnOptions = new Button(BTN_OPTIONS_TEXT);
 
 		// Set button style properties
-		btnNew.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+		btnNew.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
-		btnReview.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+		btnReview.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
-		btnStats.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+		btnStats.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
-		btnClear.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+		btnClear.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
-		btnQuit.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
-				" -fx-base: " + BTN_COLOR + ";" + 
-				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
-		btnOptions.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+		btnOptions.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 
@@ -393,9 +388,6 @@ public class MainScreen extends Parent {
 
 		btnClear.setMinWidth(menuButtons.getPrefWidth()); 
 		btnClear.setPrefHeight(Integer.MAX_VALUE);
-
-		btnQuit.setMinWidth(menuButtons.getPrefWidth()); 
-		btnQuit.setPrefHeight(Integer.MAX_VALUE);
 
 		btnOptions.setMinWidth(menuButtons.getPrefWidth()); 
 		btnOptions.setPrefHeight(Integer.MAX_VALUE);
@@ -438,7 +430,6 @@ public class MainScreen extends Parent {
 
 
 		// Add buttons to pane
-		//menuButtons.getChildren().addAll(btnNew, btnReview, btnStats, btnClear, btnOptions, btnQuit);
 
 		menuButtons.getChildren().addAll(quizButtonsVB, statsButtonsVB, optionsButtonsVB);
 
@@ -473,45 +464,56 @@ public class MainScreen extends Parent {
 				
 				final Stage confirmationStage = new Stage();
 				
+				//Creating VBox to store the confirmation GUI
 				VBox confirmationVB = new VBox(10);
 				confirmationVB.setAlignment(Pos.CENTER);
 				confirmationVB.setPrefHeight(confirmationStage.getHeight());
 				confirmationVB.setPrefWidth(confirmationStage.getWidth());
 				confirmationVB.setStyle("-fx-background-color: " + BACK_COLOR + ";");
 				
+				//Creating the confirmation text
 				Text confirmationText = new Text(ClearingStatsTXT);
 				confirmationText.setWrappingWidth(CLEAR_STATS_WRAPPING_WIDTH);
 				confirmationText.setTextAlignment(TextAlignment.CENTER);
-				confirmationText.setStyle("-fx-font: " + TXT_FONT_SIZE + " sansserif;" +
+				confirmationText.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 						" -fx-fill: " + TXT_FONT_COLOR + ";");
 				
+				//Creating the HBox to hold the buttons
 				HBox buttonHB = new HBox(BUTTON_SEPERATION);
 				buttonHB.setAlignment(Pos.CENTER);
 				
+				//Creating the confirm button
 				Button confirmBtn = new Button("Confirm");
-				confirmBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+				confirmBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 						" -fx-base: " + BTN_COLOR + ";" + 
 						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 				confirmBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 					@Override
 					public void handle(ActionEvent arg0) {
+						//Confirm the confirmation stage
 						confirmationStage.close();
+						
+						//Let user know the stats have been cleared
 						PopupWindow.DeployPopupWindow("", "Cleared Statistics");
+						
+						//Clear the stats and remove all wordlists
 						WordList.GetWordList().ClearStats();	
 						WordList.GetWordList().RemoveWordLists();
 					}
 					
 				});
 				
+				//Creating the clear button
 				Button cancelBtn = new Button("Cancel");
-				cancelBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + " sansserif;" + 
+				cancelBtn.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 						" -fx-base: " + BTN_COLOR + ";" + 
 						" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 				cancelBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 					@Override
 					public void handle(ActionEvent arg0) {
+						//Close the confirmation stage to return to the main menu as the main view
 						confirmationStage.close();
 					}
 					
@@ -521,7 +523,8 @@ public class MainScreen extends Parent {
 				
 				confirmationVB.getChildren().addAll(confirmationText, buttonHB);
 				
-				Scene confirmScene = new Scene(confirmationVB, 550, 137);
+				//Creating the scene and formatting it
+				Scene confirmScene = new Scene(confirmationVB, CONFIRMATION_CLEAR_WIDTH, CONFIRMATION_CLEAR_HEIGHT);
 				confirmationStage.setScene(confirmScene);
 				confirmationStage.setResizable(false);
 				confirmationStage.show();
@@ -531,14 +534,6 @@ public class MainScreen extends Parent {
 			}	
 		});
 
-		btnQuit.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent arg0) {
-				WordList wordList = WordList.GetWordList();
-				wordList.saveWordListToDisk();
-				Platform.exit();
-			}	
-		});
 
 		btnOptions.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

@@ -1,11 +1,9 @@
 package VoxspellScreens;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -17,7 +15,7 @@ import Sound.FestivalSpeakTask;
 import Sound.SoundPlayer;
 import VoxspellPrototype.VoxspellPrototype;
 import WordList.WordList;
-import javafx.animation.FadeTransition;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -26,11 +24,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -39,7 +33,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
@@ -57,7 +50,9 @@ public class QuizScreen extends Parent {
 	private final String BTN_ENTER_TEXT = "Enter";
 	private final String BTN_DEF_TEXT = "Definition";
 	private final int HBX_SPACING = 10;
+	private final int CIRCLE_SPACING = 40;
 	private final int VBX_SPACING = 50;
+	private final int CIRCLE_SIZE = 20;
 	private final String BTN_COLOR = VoxspellPrototype.DARK_BLUE;
 	private final String BACK_COLOR = VoxspellPrototype.LIGHT_BLUE;
 	private final String BTN_FONT_COLOR = VoxspellPrototype.WHITE;
@@ -66,6 +61,7 @@ public class QuizScreen extends Parent {
 	private final int TXT_FONT_SIZE = VoxspellPrototype.TXT_FONT_SIZE;
 	private final int BTN_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
 	private final int TFD_FONT_SIZE = VoxspellPrototype.BTN_FONT_SIZE;
+	private final String FONT = VoxspellPrototype.FONT;
 	private final int SIDE_PADDING = 10;
 	private final int TOP_BOTTOM_PADDING = 60;
 	private final int BTN_WIDTH = 200;
@@ -96,6 +92,7 @@ public class QuizScreen extends Parent {
 
 	public QuizScreen(Window window, String wordlistName, LevelSelectionScreen.QuizType quizType) {
 		
+		//Setting the quiz type
 		_quizType = quizType;
 
 		//Setting up the circle images
@@ -111,6 +108,7 @@ public class QuizScreen extends Parent {
 
 		this._window = window;
 
+		//Setting the level name
 		_level = wordlistName;
 
 		// Get words for this quiz
@@ -120,6 +118,7 @@ public class QuizScreen extends Parent {
 			_words = WordList.GetWordList().GetRandomFailedWords(wordlistName, VoxspellPrototype.QUIZ_LENGTH);
 		}
 
+		//Adding the number of words tested to the main screen to advance the users daily goals
 		MainScreen.addToTestedWordsProgress(_words.size());
 
 		// Create root pane and set its size to whole window
@@ -134,7 +133,7 @@ public class QuizScreen extends Parent {
 		_txtQuiz.prefWidth(_window.GetWidth());
 		_txtQuiz.setTextAlignment(TextAlignment.CENTER);
 		_txtQuiz.setWrappingWidth(_window.GetWidth());
-		_txtQuiz.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
+		_txtQuiz.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 		// Create score progress counter text
@@ -142,7 +141,7 @@ public class QuizScreen extends Parent {
 		_txtProgress.prefWidth(_window.GetWidth());
 		_txtProgress.setTextAlignment(TextAlignment.CENTER);
 		_txtProgress.setWrappingWidth(_window.GetWidth() - (SIDE_PADDING * 2));
-		_txtProgress.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
+		_txtProgress.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 		//Create count down timer
@@ -150,7 +149,7 @@ public class QuizScreen extends Parent {
 		_Counter.prefWidth(_window.GetWidth());
 		_Counter.setTextAlignment(TextAlignment.CENTER);
 		_Counter.setWrappingWidth(_window.GetWidth());
-		_Counter.setStyle("-fx-font: " + TXT_FONT_SIZE + " arial;" +
+		_Counter.setStyle("-fx-font: " + TXT_FONT_SIZE + FONT + ";" +
 				" -fx-fill: " + TXT_FONT_COLOR + ";");
 
 
@@ -189,13 +188,13 @@ public class QuizScreen extends Parent {
 		centerPane.getChildren().addAll(btnSpeak, _tfdAttempt, btnEnter);
 
 		// Set node styles
-		btnSpeak.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		btnSpeak.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
-		btnEnter.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		btnEnter.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
-		_tfdAttempt.setStyle("-fx-font: " + TFD_FONT_SIZE + " arial;" +
+		_tfdAttempt.setStyle("-fx-font: " + TFD_FONT_SIZE + FONT + ";" +
 				"-fx-text-fill: " + TFD_FONT_COLOR + ";");
 
 		// Center text in text-field
@@ -219,6 +218,7 @@ public class QuizScreen extends Parent {
 			}
 		});
 
+		//Set action for enter button
 		btnEnter.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent arg0) {				
@@ -226,6 +226,7 @@ public class QuizScreen extends Parent {
 			}
 		});
 
+		//If user pressed enter then call the attemptWord() method
 		_tfdAttempt.setOnKeyReleased(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent e) {
@@ -235,17 +236,20 @@ public class QuizScreen extends Parent {
 			}	
 		});
 
+		//Creating the HBox that will hold the Definition button
 		HBox defBox = new HBox(HBX_SPACING);
 		defBox.setAlignment(Pos.CENTER);
 
+		//Creating the definition button and formatting it
 		Button btnDefinition = new Button(BTN_DEF_TEXT);
 
-		btnDefinition.setStyle("-fx-font: " + BTN_FONT_SIZE + " arial;" + 
+		btnDefinition.setStyle("-fx-font: " + BTN_FONT_SIZE + FONT + ";" + 
 				" -fx-base: " + BTN_COLOR + ";" + 
 				" -fx-text-fill: " + BTN_FONT_COLOR + ";");
 		btnDefinition.setPrefWidth(BTN_WIDTH);
 		btnDefinition.setPrefHeight(BTN_HEIGHT);
 
+		// Set action for definition button
 		btnDefinition.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -260,21 +264,24 @@ public class QuizScreen extends Parent {
 		defBox.getChildren().add(btnDefinition);
 
 		//Creating the HBox to hold all the images which indicate the users progress
-		HBox quizProgressHB = new HBox(HBX_SPACING * 4);
+		HBox quizProgressHB = new HBox(CIRCLE_SPACING);
 		quizProgressHB.setAlignment(Pos.CENTER);
 		quizProgressHB.setMaxWidth(_window.GetWidth());
 		quizProgressHB.setPadding(new Insets(30, 0, 0, 0));
 
+		//Getting the number of circles needed
 		int numOfCircles = _words.size();
 
+		//Getting the grey circle image as initially all the circles will be grey
 		File greyCircleFile = new File("./images/grey-circle.png");
 
 		Image greyCircle = new Image(greyCircleFile.toURI().toString());
 
-		int size = _window.GetWidth()/(numOfCircles + HBX_SPACING * 2);
+		//Sizing the images
+		int size = _window.GetWidth()/(numOfCircles + CIRCLE_SIZE);
 
 		
-		//Adding each circle to the HBox and an array list
+		//Adding each circle to the HBox and the array list so that they can be indexed and changed later on in the quiz
 		for(int i = 0; i < numOfCircles; i++) {
 			ImageView circle = new ImageView();
 			circle.setImage(greyCircle);
@@ -302,6 +309,7 @@ public class QuizScreen extends Parent {
 		//Set up timer
 		_time = 31;
 		
+		//Creating a keyframe to tick every second and change the timer
 		KeyFrame keyframe = new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
 
 			@Override
@@ -317,6 +325,7 @@ public class QuizScreen extends Parent {
 					_time = 31;
 					_Counter.setText("" + _time);	
 
+					//If the user did not enter a word then ranxoutxofxtime as the quiz does not accept empty spaces as words
 					if(_tfdAttempt.getText().isEmpty()) {
 						attemptWord("ranxoutxofxtime");
 					} else {
@@ -326,6 +335,7 @@ public class QuizScreen extends Parent {
 			}
 
 		});
+		//Setting the counter to go
 		_countDownTimer.setCycleCount(Timeline.INDEFINITE);
 		_countDownTimer.getKeyFrames().add(keyframe);
 		_countDownTimer.play();
@@ -339,20 +349,22 @@ public class QuizScreen extends Parent {
 	 */
 	private boolean attemptWord(String word) {
 
+		//Quiz title is Quiz
 		_txtQuiz.setText("Quiz");
 
+		//Getting rid of any leading or trailing whitespace
 		word = word.trim();
 
 		if (word.equals("")) {
 			// Word attempt must contain some characters		
-			_txtQuiz.setText("Quiz\n\nEnter a word"); 
+			_txtQuiz.setText("Quiz\nEnter a word"); 
 
 			return false;
 		}
 
 		if (word.contains(" ")) {
 			// Word attempt may not contain white space
-			_txtQuiz.setText("Quiz\n\nMay not contain spaces"); 
+			_txtQuiz.setText("Quiz\nMay not contain spaces"); 
 
 			return false;
 		}
@@ -360,12 +372,13 @@ public class QuizScreen extends Parent {
 		if (!word.matches("[a-zA-Z]+")) {
 			// Word attempt may only contain alphabet characters.
 
-			_txtQuiz.setText("Quiz\n\nMay only contain letters"); 
+			_txtQuiz.setText("Quiz\nMay only contain letters"); 
 
 			return false;
 		}
 
 
+		//Checking that the word is correct, ignoring case
 		boolean correct = (word.toLowerCase().equals(currentWord().toLowerCase()));
 		boolean advance = false;
 		String speechOutput = "";
@@ -375,6 +388,7 @@ public class QuizScreen extends Parent {
 				// Correct on first guess
 				_correctWords++;
 
+				//Set the circle to be green to indicate the user got it correct first try
 				_quizProgress.get(_wordIndex).setImage(GreenCircle);
 
 				//Playing the correct sound
@@ -444,8 +458,11 @@ public class QuizScreen extends Parent {
 				//Setting the quiz progress to be red
 				_quizProgress.get(_wordIndex).setImage(RedCircle);
 				
+				//Adding it to the failed word list
 				WordList.GetWordList().failedWord(currentWord(), _level);
 				advance = true;
+				
+				//If the user did not enter any word in time 
 				if(word.equals("ranxoutxofxtime")) {
 					_userAttempts.put(currentWord(), " ");
 				} else {
@@ -454,11 +471,14 @@ public class QuizScreen extends Parent {
 			}
 		}
 
+		//Say the next word if advance is true
 		if (advance && nextWord()) {
 			speechOutput = speechOutput + " Spell " + currentWord();
 		}
 
 		new FestivalSpeakTask(speechOutput).run();
+		
+		//Clear the text field
 		_tfdAttempt.clear();
 
 		return correct;
@@ -510,6 +530,7 @@ public class QuizScreen extends Parent {
 			URLConnection myURLConnection = dictionaryAPICall.openConnection();
 			myURLConnection.connect();
 
+			//Creating a buffered reader which reads the HTML from merriam webster
 			BufferedReader in = new BufferedReader(new InputStreamReader(
 					myURLConnection.getInputStream()));
 			String inputLine;
@@ -529,6 +550,7 @@ public class QuizScreen extends Parent {
 					counter++;
 				}
 
+				//Break because the definition has been found
 				if(counter == 2) {
 					def = inputLine;
 					break;

@@ -2,7 +2,6 @@ package VoxspellScreens;
 
 import java.awt.Rectangle;
 
-import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -16,10 +15,16 @@ public class Window {
 	private int _width, _height;
 	private Stage _window;
 	
+	/**
+	 * @return the width of the window
+	 */
 	public int GetWidth() {
 		return _width;
 	}
 	
+	/**
+	 * @return the height of the window
+	 */
 	public int GetHeight() {
 		return _height;
 	}
@@ -73,6 +78,9 @@ public class Window {
 		_window.setY(y);
 	}
 	
+	/**
+	 * @param title - the title for the window
+	 */
 	public void SetWindowTitle(String title) {
 		_window.setTitle(title);
 	}
