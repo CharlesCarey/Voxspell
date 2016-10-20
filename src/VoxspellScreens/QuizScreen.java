@@ -417,7 +417,7 @@ public class QuizScreen extends Parent {
 				new SoundPlayer().run();
 				
 				//Saying the word was incorrect, spell it again
-				speechOutput = speechOutput + "Incorrect... try again... " + currentWord() + "... ..." + currentWord() + ".";
+				speechOutput = speechOutput + "Incorrect... try again... " + "The word is " + currentWord() + ".";
 				_firstGuess = false;
 			}
 		} else {
