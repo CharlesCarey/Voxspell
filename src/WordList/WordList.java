@@ -21,6 +21,8 @@ import VoxspellScreens.PopupWindow;
 
 /**
  * 
+ * This class handles the storage, updating, loading and saving of the wordlists in the program
+ * 
  * @author Charles Carey & Nathan Kear
  *
  */

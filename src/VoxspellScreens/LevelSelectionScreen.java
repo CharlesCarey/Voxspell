@@ -33,6 +33,8 @@ import javafx.util.Duration;
 
 /**
  * 
+ * This class handles the choosing of which level to play a quiz and the initial unlocking of levels.
+ * 
  * @author Charles Carey & Nathan Kear
  *
  */

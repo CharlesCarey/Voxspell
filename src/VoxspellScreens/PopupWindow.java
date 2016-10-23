@@ -11,7 +11,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
- * Create pop-up window that displays simple text.
+ * Create pop-up window that displays simple text. The pop up can have an optional title
  * @author Charles Carey & Nathan Kear
  *
  */

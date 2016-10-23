@@ -28,6 +28,8 @@ import javafx.stage.Stage;
 
 /**
  * 
+ * This class displays the Main Screen that the users first see when they open the program
+ * 
  * @author Charles Carey & Nathan Kear
  *
  */

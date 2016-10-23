@@ -21,6 +21,13 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+/**
+ * 
+ * This class handles the loading of new wordlists into the program
+ * 
+ * @author Charles Carey
+ *
+ */
 public class WordListLoader extends Parent{
 
 	private Window _window;

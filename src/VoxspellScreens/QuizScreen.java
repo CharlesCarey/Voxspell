@@ -39,6 +39,8 @@ import javafx.util.Duration;
 
 /**
  * 
+ * This class handles everything to do with the quiz mode
+ * 
  * @author Charles Carey & Nathan Kear
  *
  */

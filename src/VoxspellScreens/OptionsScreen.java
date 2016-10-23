@@ -22,6 +22,8 @@ import javafx.scene.text.TextAlignment;
 
 /**
  * 
+ * This class handles the changing and setting of options
+ * 
  * @author Charles Carey & Nathan Kear
  *
  */

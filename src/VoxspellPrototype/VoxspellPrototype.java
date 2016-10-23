@@ -11,6 +11,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
+ *
+ * This is the main class which launches Voxspell
  * 
  * @author Charles Carey & Nathan Kear
  *

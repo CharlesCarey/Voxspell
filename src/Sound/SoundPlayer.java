@@ -3,7 +3,7 @@ package Sound;
 import javafx.concurrent.Task;
 
 /**
- * This class handles the sound effects for the quiz
+ * This class handles the sound effects for the quiz, such as cheering and incorrect and correct noises
  * 
  * @author Charles Carey
  *

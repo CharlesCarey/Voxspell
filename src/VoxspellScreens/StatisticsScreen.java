@@ -25,6 +25,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
 import javafx.util.Callback;
 
+/**
+ * 
+ * This class displays the stats for every level in every wordlist
+ * 
+ * @author Charles Carey
+ *
+ */
 public class StatisticsScreen extends Parent {
 	
 	private Window _window;

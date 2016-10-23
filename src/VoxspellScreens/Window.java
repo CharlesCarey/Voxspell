@@ -6,7 +6,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * JavaFX window wrapper
+ * JavaFX window wrapper for handling all details to do with the window
  * @author Nathan Kear
  *
  */

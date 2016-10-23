@@ -5,6 +5,8 @@ import java.util.HashMap;
 
 /**
  * 
+ * This class handles all the details for levels within wordlists
+ * 
  * @author Charles Carey & Nathan Kear
  *
  */

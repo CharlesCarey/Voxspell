@@ -21,6 +21,8 @@ import javafx.util.Callback;
 
 /**
  * 
+ * This Class handles the showing of the user's attempts versus the actual spelling after a quiz
+ * 
  * @author Charles Carey
  *
  */

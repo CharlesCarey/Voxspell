@@ -3,7 +3,7 @@ package Sound;
 import javafx.concurrent.Task;
 
 /**
- * This class handles all voice synthesis for the program
+ * This class handles all voice synthesis for the program. It is mainly used in the Quiz Screen for saying the words
  * 
  * @author Charles and Nathan Kear
  *

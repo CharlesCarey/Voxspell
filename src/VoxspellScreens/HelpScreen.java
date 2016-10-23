@@ -10,7 +10,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-
+/**
+ * 
+ * This class handles the displaying of the help dialogues to the user
+ * 
+ * @author Charles Carey
+ *
+ */
 public class HelpScreen {
 
 	private final String FONT = VoxspellPrototype.FONT;
